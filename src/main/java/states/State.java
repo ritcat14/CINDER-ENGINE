@@ -4,24 +4,43 @@ package states;
  *  Class that represents a game state
  */
 
-import core.graphics.gl.Shader;
+import core.objectManagers.ObjectManager;
+import core.objectManagers.StateManager;
+import core.objects.SharedObject;
 
-public abstract class State {
+public abstract class State extends SharedObject {
 
-    protected Shader shader;
+    protected ObjectManager objectManager;
+    protected StateManager.States stateName;
 
-    public State(Shader shader) {
-        this.shader = shader;
+    public State(ObjectManager objectManager, StateManager.States stateName) {
+        this.objectManager = objectManager;
+        this.stateName = stateName;
     }
 
     public abstract void init();
 
-    public abstract void update();
+    @Override
+    public void update() {
+        objectManager.update();
+    }
 
-    public abstract void preRender();
+    @Override
+    public void render() {
+        objectManager.render();
+    }
 
-    public abstract void render();
+    @Override
+    public synchronized void intermediateCode() {
+        objectManager.intermediateCode();
+    }
 
-    public abstract void postRender();
+    public StateManager.States getStateName() {
+        return stateName;
+    }
+
+    public void cleanUp() {
+        objectManager.cleanUp();
+    }
 
 }
