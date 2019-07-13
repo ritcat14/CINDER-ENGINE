@@ -4,36 +4,46 @@ public abstract class Loop implements Runnable {
 
     private final double SECOND = 1000000000;
     private final double MAX_TPS;
-    private final Thread thread;
+    private final String name;
     private final FairLock lock = new FairLock();
 
     protected final ThreadManager threadManager;
 
+    private Thread thread;
     private int TPS;
     private int finalTPS;
-    private boolean running = false;
 
+    private volatile boolean running = false;
     private volatile boolean locked = false;
 
     public Loop(ThreadManager threadManager, double MAX_TPS, String name) {
+        this.name = name;
         this.threadManager = threadManager;
-        threadManager.addLoop(this);
         this.MAX_TPS = MAX_TPS;
-        this.thread = new Thread(this, name);
     }
 
     public synchronized void start() {
         running = true;
+        thread = new Thread(this, name);
         thread.start();
     }
 
     public synchronized void stop() {
+        if (locked) {
+            lock.unlock();
+            locked = false;
+        }
         running = false;
         try {
             thread.join();
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(-1);
         }
+    }
+
+    public synchronized void stopRunning() {
+        running = false;
     }
 
     public abstract void init();
@@ -41,9 +51,14 @@ public abstract class Loop implements Runnable {
     protected abstract void loop();
 
     private void threadLoop() {
+        loop();
         try {
             lock.lock();
             locked = true;
+            if (threadManager.shouldClose()) {
+                stopRunning();
+                return;
+            }
             loop();
             TPS++;
         } catch (InterruptedException e) {
@@ -70,7 +85,6 @@ public abstract class Loop implements Runnable {
                 TPS++;
                 delta--;
             }
-
             if(System.currentTimeMillis() - timer > 1000) {
                 finalTPS = TPS;
                 timer += 1000;
@@ -84,8 +98,7 @@ public abstract class Loop implements Runnable {
         return finalTPS;
     }
 
-    public synchronized boolean isLocked() {
-        return locked;
+    public synchronized boolean isRunning() {
+        return running;
     }
-
 }
