@@ -5,6 +5,10 @@ import states.State;
 public class Game extends State {
 
 
+    public Game() {
+        super(new TestShader());
+    }
+
     @Override
     public void init() {
 

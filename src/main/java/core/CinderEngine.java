@@ -1,40 +1,35 @@
 package core;
 
 import cache.FileCache;
-import core.graphics.Renderer;
-import core.logic.Updater;
-import states.State;
-
-import java.util.ArrayList;
-import java.util.List;
+import core.threads.Renderer;
+import core.threads.ThreadManager;
+import core.threads.Updater;
 
 public class CinderEngine {
 
     public static double WIDTH, HEIGHT, ASPECT_RATIO;
 
-    private List<State> states = new ArrayList<>();
     private Updater updater;
     private Renderer renderer;
+    private ThreadManager threadManager;
 
     public CinderEngine(double width, double height) {
         WIDTH = width;
         HEIGHT = height;
         ASPECT_RATIO = width/height;
-        updater = new Updater();
-        renderer = new Renderer(width, height);
+        threadManager = new ThreadManager();
+        updater = new Updater(threadManager, 120);
+        renderer = new Renderer(threadManager, 60, width, height);
     }
 
-    public void init() {
-        FileCache.init();
-    }
-
-    public synchronized void start() {
+    public void start() {
+        init();
         updater.start();
         renderer.start();
     }
 
-    public void addState(State state) {
-        states.add(state);
+    private void init() {
+        FileCache.init();
     }
 
 }
