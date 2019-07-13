@@ -4,37 +4,42 @@ package core.graphics;
  *  Main window class
  */
 
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
-import java.nio.*;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-    private volatile long ID;
+    private long ID;
+    private boolean shouldClose = false;
 
     public Window(double width, double height) {
-        GLFWErrorCallback.createPrint(System.err).set();
+        GLFWErrorCallback.createThrow().set();
 
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        glfwWindowHint(GLFW_CONTEXT_RELEASE_BEHAVIOR, GLFW_RELEASE_BEHAVIOR_FLUSH);
 
-        ID = glfwCreateWindow((int)width, (int)height, "CINDER-ENGINE", NULL, NULL);
+        ID = glfwCreateWindow((int) width, (int) height, "", NULL, NULL);
         if (ID == NULL) throw new RuntimeException("Failed to create GLFW window");
 
         // Key set up
         glfwSetKeyCallback(ID, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+                glfwSetWindowShouldClose(window, true);
         });
 
         try (MemoryStack stack = stackPush()) {
@@ -48,25 +53,19 @@ public class Window {
                     (vidMode.width() - pWidth.get(0)) / 2,
                     (vidMode.height() - pHeight.get(0)) / 2);
         }
-        updateThread();
+        setThread();
+        glfwSwapInterval(1);
+        showWindow();
         nullThread();
     }
 
-    public void setTitle(String title) {
-        glfwSetWindowTitle(ID, title);
-    }
-
-    public void nullThread() {
-        glfwMakeContextCurrent(NULL);
-    }
-
-    public void updateThread() {
-        glfwMakeContextCurrent(NULL);
-        glfwMakeContextCurrent(ID);
-        System.out.println(glfwGetCurrentContext());
+    public synchronized void setThread() {
+        glfwMakeContextCurrent(getID());
         GL.createCapabilities();
-        glfwSwapInterval(1);
-        showWindow();
+    }
+
+    public synchronized void nullThread() {
+        glfwMakeContextCurrent(NULL);
     }
 
     public void hideWindow() {
@@ -77,16 +76,22 @@ public class Window {
         glfwShowWindow(ID);
     }
 
-    public void render() {
-        updateThread();
+    public synchronized void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 0.3f, 0.8f, 0.0f);
         glfwSwapBuffers(ID);
-        glfwPollEvents();
-        nullThread();
     }
 
-    public boolean shouldClose() {
-        return glfwWindowShouldClose(ID);
+    public synchronized void update() {
+        shouldClose = glfwWindowShouldClose(ID);
+        glfwPollEvents();
+    }
+
+    public synchronized boolean shouldClose() {
+        return shouldClose;
+    }
+
+    public long getID() {
+        return ID;
     }
 }

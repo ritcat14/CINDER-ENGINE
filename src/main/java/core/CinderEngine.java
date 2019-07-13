@@ -18,14 +18,21 @@ public class CinderEngine {
         HEIGHT = height;
         ASPECT_RATIO = width/height;
         threadManager = new ThreadManager();
-        updater = new Updater(threadManager, 120);
-        renderer = new Renderer(threadManager, 60, width, height);
+        updater = new Updater(threadManager, 120, width, height);
+        renderer = new Renderer(threadManager, 60);
     }
 
     public void start() {
         init();
         updater.start();
         renderer.start();
+        mainLoop();
+    }
+
+    private void mainLoop() {
+        while (true) if (threadManager.checkThreads()) break;
+        System.out.println("Closing Game.");
+        System.exit(0);
     }
 
     private void init() {
