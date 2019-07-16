@@ -1,26 +1,29 @@
 package core.threads;
 
-public abstract class Loop implements Runnable {
+public abstract class Loop implements Runnable, LoopInterface {
 
     private final double SECOND = 1000000000;
     private final double MAX_TPS;
     private final String name;
     private final FairLock lock = new FairLock();
 
-    protected final ThreadManager threadManager;
+    protected volatile ThreadManager threadManager;
 
     private Thread thread;
     private int TPS;
     private int finalTPS;
 
-    private volatile boolean running = false;
     private volatile boolean locked = false;
+    private volatile boolean running = false;
+    private volatile boolean closed = false;
 
     public Loop(ThreadManager threadManager, double MAX_TPS, String name) {
-        this.name = name;
+        this.name = name.toUpperCase();
         this.threadManager = threadManager;
         this.MAX_TPS = MAX_TPS;
     }
+
+    public abstract void init();
 
     public synchronized void start() {
         running = true;
@@ -29,11 +32,12 @@ public abstract class Loop implements Runnable {
     }
 
     public synchronized void stop() {
+        System.out.println("Closing thread " + thread.getName());
+        closed = true;
         if (locked) {
             lock.unlock();
             locked = false;
         }
-        running = false;
         try {
             thread.join();
         } catch (Exception e) {
@@ -46,20 +50,11 @@ public abstract class Loop implements Runnable {
         running = false;
     }
 
-    public abstract void init();
-
-    protected abstract void loop();
-
     private void threadLoop() {
-        loop();
         try {
             lock.lock();
             locked = true;
-            if (threadManager.shouldClose()) {
-                stopRunning();
-                return;
-            }
-            loop();
+            onLoop();
             TPS++;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -98,7 +93,11 @@ public abstract class Loop implements Runnable {
         return finalTPS;
     }
 
-    public synchronized boolean isRunning() {
-        return running;
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public synchronized String getName() {
+        return name;
     }
 }

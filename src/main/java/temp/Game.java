@@ -1,18 +1,25 @@
 package temp;
 
-import core.objectManagers.EntityManager;
-import core.objectManagers.StateManager;
-import states.State;
+import core.objectManagers.ObjectManager;
+import core.states.State;
+
+import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class Game extends State {
 
-    public Game() {
-        super(new EntityManager(), StateManager.States.GAME);
+    public Game(ObjectManager objectManager) {
+        super(objectManager, "game");
     }
 
     @Override
     public void init() {
+        System.out.println("Initiating game state");
         for (int i = 0; i < 10; i++) objectManager.addObject(new TestObject());
     }
 
+    @Override
+    public void render() {
+        glClearColor(1.0f, 0f, 0f, 0.0f);
+        super.render();
+    }
 }

@@ -8,7 +8,6 @@ public class Renderer extends Loop {
 
     public Renderer(ThreadManager threadManager, int MAX_TPS) {
         super(threadManager, MAX_TPS, "RENDERER");
-        threadManager.setRenderer(this);
     }
 
     @Override
@@ -16,8 +15,7 @@ public class Renderer extends Loop {
     }
 
     @Override
-    protected void loop() {
-        threadManager.intermediateCode();
+    public void onLoop() {
         threadManager.render();
     }
 
