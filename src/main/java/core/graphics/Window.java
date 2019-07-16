@@ -19,7 +19,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 
     private long ID;
-    private volatile boolean shouldClose = false;
+    private boolean shouldClose = false;
 
     public Window(double width, double height) {
         GLFWErrorCallback.createThrow().set();
@@ -83,11 +83,12 @@ public class Window {
     }
 
     public synchronized void update() {
+        shouldClose = glfwWindowShouldClose(ID);
         glfwPollEvents();
     }
 
     public synchronized boolean shouldClose() {
-        return glfwWindowShouldClose(ID);
+        return shouldClose;
     }
 
     public long getID() {

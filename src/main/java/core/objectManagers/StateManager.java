@@ -1,47 +1,31 @@
 package core.objectManagers;
 
-import core.objects.Object;
-import core.states.State;
-import core.threads.ThreadManager;
+import core.objects.SharedObject;
+import states.State;
 
 import java.util.Iterator;
 
 public class StateManager extends ObjectManager {
 
-    private volatile String currentStateName;
+    public enum States {
+        START, GAME, PAUSE
+    }
+
+    private volatile States currentStateEnum;
     private volatile State currentState;
 
-    private ThreadManager threadManager;
-
-    public StateManager(ThreadManager threadManager) {
-        this.threadManager = threadManager;
-    }
-
-    public synchronized void setCurrentState(String stateName) {
-        if (currentStateName != null && currentStateName.equals(stateName)) return;
-        Iterator<Object> it = sharedObjects.iterator();
+    public synchronized void setCurrentState(States state) {
+        if (currentStateEnum != null && currentStateEnum.equals(state)) return;
+        Iterator<SharedObject> it = sharedObjects.iterator();
         while (it.hasNext()) {
             State state1 = ((State) it.next());
-            if (state1.getStateName().equals(stateName)) {
-                if (currentState != null) {
-                    currentState.cleanUp();
-                    if (currentState.hasRequestedChange()) {
-                        State preState = currentState;
-                        changeState(state1);
-                        preState.changed();
-                        return;
-                    }
-                }
-                currentStateName = stateName;
-                changeState(state1);
+            if (state1.getStateName().equals(state)) {
+                if (currentState != null) currentState.cleanUp();
+                currentStateEnum = state;
+                currentState = state1;
+                currentState.init();
             }
         }
-    }
-
-    private void changeState(State state) {
-        currentState = state;
-        threadManager.addResource(currentState);
-        threadManager.addResource(currentState.getObjectManager());
     }
 
     public synchronized void addState(State state) {
@@ -52,32 +36,39 @@ public class StateManager extends ObjectManager {
         super.removeObject(state);
     }
 
-    public void init() {
+    @Override
+    public synchronized void intermediateCode() {
         if (currentState == null) return;
-        currentState.init();
+        currentState.intermediateCode();
     }
 
     @Override
     public void update() {
         if (currentState == null) return;
-        if (currentState.hasRequestedChange()) setCurrentState(currentState.getRequestedState());
         currentState.update();
     }
 
     @Override
     public void render() {
         if (currentState == null) return;
-        if (currentState.hasRequestedChange()) return;
         currentState.render();
     }
 
     @Override
-    @Deprecated
-    public synchronized void addObject(Object object) {
+    protected void onUpdate() {
+    }
+
+    @Override
+    protected void onRender() {
     }
 
     @Override
     @Deprecated
-    public synchronized void removeObject(Object object) {
+    public synchronized void addObject(SharedObject object) {
+    }
+
+    @Override
+    @Deprecated
+    public synchronized void removeObject(SharedObject object) {
     }
 }

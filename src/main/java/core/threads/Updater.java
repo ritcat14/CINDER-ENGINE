@@ -6,17 +6,23 @@ package core.threads;
 
 public class Updater extends Loop {
 
-    public Updater(ThreadManager threadManager, double MAX_TPS) {
+    private final double width, height;
+
+    public Updater(ThreadManager threadManager, double MAX_TPS, double width, double height) {
         super(threadManager, MAX_TPS, "UPDATER");
+        this.width = width;
+        this.height = height;
+        threadManager.setUpdater(this);
     }
 
     @Override
-    public synchronized void init() {
-        threadManager.init();
+    public void init() {
+        threadManager.init(width, height);
     }
 
     @Override
-    public void onLoop() {
+    protected void loop() {
+        threadManager.intermediateCode();
         threadManager.update();
     }
 }

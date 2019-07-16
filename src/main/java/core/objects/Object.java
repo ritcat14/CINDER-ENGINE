@@ -1,11 +1,9 @@
 package core.objects;
 
-import core.loading.Resource;
+public abstract class Object {
 
-public interface Object extends Resource {
+    public abstract void update();
 
-    void update();
-
-    void render();
+    public abstract void render();
 
 }

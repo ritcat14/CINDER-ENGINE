@@ -45,4 +45,5 @@ public class FairLock {
         lockingThread = null;
         if (waitingThreads.size() > 0) waitingThreads.get(0).doNotify();
     }
+
 }
