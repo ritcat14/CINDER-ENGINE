@@ -3,7 +3,7 @@ package core.objects;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public abstract class Entity extends SharedObject {
+public abstract class Entity implements Object {
 
     private Vector3f position;
     private Vector3f rotation;
@@ -19,7 +19,7 @@ public abstract class Entity extends SharedObject {
         this.scale = scale;
     }
 
-    protected abstract void updateTransformation();
+    public abstract void updateTransformation();
 
     public Vector3f getPosition() {
         return position;
