@@ -2,17 +2,16 @@ package core;
 
 import cache.FileCache;
 import core.objectManagers.StateManager;
+import core.states.State;
+import core.threads.Loader;
 import core.threads.Renderer;
 import core.threads.ThreadManager;
 import core.threads.Updater;
-import states.State;
 
 public class CinderEngine {
 
     public static double WIDTH, HEIGHT, ASPECT_RATIO;
 
-    private Updater updater;
-    private Renderer renderer;
     private ThreadManager threadManager;
     private StateManager stateManager;
 
@@ -20,34 +19,36 @@ public class CinderEngine {
         WIDTH = width;
         HEIGHT = height;
         ASPECT_RATIO = width/height;
-        threadManager = new ThreadManager(stateManager = new StateManager());
-        updater = new Updater(threadManager, 120, width, height);
-        renderer = new Renderer(threadManager, 60);
+        threadManager = new ThreadManager(width, height);
+        stateManager = threadManager.getStateManager();
+        threadManager.addLoop(new Loader(threadManager));
+        threadManager.addLoop(new Updater(threadManager, 120));
+        threadManager.addLoop(new Renderer(threadManager, 60));
     }
 
     public synchronized void addState(State state) {
         stateManager.addState(state);
     }
 
-    public synchronized void setState(StateManager.States state) {
-        stateManager.setCurrentState(state);
+    public synchronized void setState(String stateName) {
+        stateManager.setCurrentState(stateName);
     }
 
     public void start() {
         init();
-        updater.start();
-        renderer.start();
+        threadManager.startLoops();
         mainLoop();
     }
 
     private void mainLoop() {
-        while (true) if (threadManager.checkThreads()) break;
-        System.out.println("Closing Game.");
-        System.exit(0);
+        while (true) threadManager.checkThreads();
     }
 
     private void init() {
         FileCache.init();
     }
 
+    public ThreadManager getThreadManager() {
+        return threadManager;
+    }
 }

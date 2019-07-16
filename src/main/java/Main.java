@@ -1,6 +1,8 @@
 import core.CinderEngine;
-import core.objectManagers.StateManager;
+import core.objectManagers.EntityManager;
+import core.objectManagers.NullManager;
 import temp.Game;
+import temp.Start;
 
 import java.awt.*;
 
@@ -11,9 +13,9 @@ public class Main {
 
     public static void main(String[] args) {
         CinderEngine cinderEngine = new CinderEngine(WIDTH, HEIGHT);
-        cinderEngine.addState(new Game());
-        cinderEngine.setState(StateManager.States.GAME);
+        cinderEngine.addState(new Start(new NullManager()));
+        cinderEngine.addState(new Game(new EntityManager()));
+        cinderEngine.setState("start");
         cinderEngine.start();
     }
-
 }
