@@ -6,13 +6,14 @@ package core.states;
 
 import core.objectManagers.ObjectManager;
 import core.objects.Object;
+import core.CinderEngine.RenderType;
 
 public abstract class State implements Object {
 
     private volatile boolean requestedChange = false;
     private volatile String requestedState = "";
 
-    protected ObjectManager objectManager;
+    protected ObjectManager objectManager; // For allowing the state to handle it's own objects
     protected String stateName;
 
     public State(ObjectManager objectManager, String stateName) {
@@ -26,8 +27,8 @@ public abstract class State implements Object {
     }
 
     @Override
-    public void render() {
-        objectManager.render();
+    public void render(RednerType renderType) {
+        objectManager.render(renderType);
     }
 
     public void requestChange(String stateName) {

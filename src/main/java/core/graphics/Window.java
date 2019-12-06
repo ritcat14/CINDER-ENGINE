@@ -1,8 +1,6 @@
 package core.graphics;
 
-/*
- *  Main window class
- */
+import core.CinderEngine.RenderType;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -15,6 +13,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+/*
+ *  Main window class
+ */
 
 public class Window {
 
@@ -76,8 +78,9 @@ public class Window {
         glfwShowWindow(ID);
     }
 
-    public synchronized void render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    public synchronized void render(RenderType renderType) {
+        if (renderType == RenderType.3D) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        else glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0f, 0.3f, 0.8f, 0.0f);
         glfwSwapBuffers(ID);
     }

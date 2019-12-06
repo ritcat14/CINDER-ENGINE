@@ -2,6 +2,7 @@ package temp;
 
 import core.objectManagers.ObjectManager;
 import core.states.State;
+import core.CinderEngine.RenderType;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
 
@@ -18,8 +19,8 @@ public class Game extends State {
     }
 
     @Override
-    public void render() {
+    public void render(RenderType renderType) {
         glClearColor(1.0f, 0f, 0f, 0.0f);
-        super.render();
+        super.render(renderType);
     }
 }

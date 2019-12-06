@@ -2,6 +2,7 @@ package temp;
 
 import core.objects.Entity;
 import org.joml.Vector3f;
+import core.CinderEngine.RenderType;
 
 public class TestObject extends Entity {
 
@@ -28,7 +29,7 @@ public class TestObject extends Entity {
     }
 
     @Override
-    public void render() {
+    public void render(RenderType renderType) {
         //System.out.println("TEST OBJECT RENDER");
     }
 }

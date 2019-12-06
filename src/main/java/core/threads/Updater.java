@@ -6,8 +6,8 @@ package core.threads;
 
 public class Updater extends Loop {
 
-    public Updater(ThreadManager threadManager, double MAX_TPS) {
-        super(threadManager, MAX_TPS, "UPDATER");
+    public Updater(ThreadManager threadManager, double MAX_TPS, RenderType renderType) {
+        super(threadManager, MAX_TPS, "UPDATER", renderType);
     }
 
     @Override

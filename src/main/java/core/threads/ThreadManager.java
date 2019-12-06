@@ -4,6 +4,7 @@ import core.graphics.Window;
 import core.loading.Resource;
 import core.objectManagers.StateManager;
 import core.objects.Object;
+import core.CinderEngine.RenderType;
 
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -36,11 +37,11 @@ public class ThreadManager implements Object {
         window.nullThread();
     }
 
-    public synchronized void render() {
+    public synchronized void render(RenderType renderType) {
         if (window == null) return;
         window.setThread();
-        window.render();
-        stateManager.render();
+        window.render(renderType);
+        stateManager.render(renderType);
         checkClosing();
         window.nullThread();
     }

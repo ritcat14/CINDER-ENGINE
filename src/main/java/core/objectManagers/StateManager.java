@@ -3,6 +3,7 @@ package core.objectManagers;
 import core.objects.Object;
 import core.states.State;
 import core.threads.ThreadManager;
+import core.CinderEngine.RenderType;
 
 import java.util.Iterator;
 
@@ -65,10 +66,10 @@ public class StateManager extends ObjectManager {
     }
 
     @Override
-    public void render() {
+    public void render(RenderType renderType) {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
-        currentState.render();
+        currentState.render(renderType);
     }
 
     @Override

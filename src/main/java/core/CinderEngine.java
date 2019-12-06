@@ -9,21 +9,29 @@ import core.threads.ThreadManager;
 import core.threads.Updater;
 
 public class CinderEngine {
+    
+    public static enum RenderType {
+        3D, 2D;
+    }
 
     public static double WIDTH, HEIGHT, ASPECT_RATIO;
+    
+    private final RenderType renderType;
 
     private ThreadManager threadManager;
     private StateManager stateManager;
+    private RenderType renderType;
 
-    public CinderEngine(double width, double height) {
+    public CinderEngine(double width, double height, RenderType renderType) {
         WIDTH = width;
         HEIGHT = height;
+        this.renderType = renderType;
         ASPECT_RATIO = width/height;
         threadManager = new ThreadManager(width, height);
         stateManager = threadManager.getStateManager();
-        threadManager.addLoop(new Loader(threadManager));
-        threadManager.addLoop(new Updater(threadManager, 120));
-        threadManager.addLoop(new Renderer(threadManager, 60));
+        threadManager.addLoop(new Loader(threadManager, renderType));
+        threadManager.addLoop(new Updater(threadManager, 120, renderType));
+        threadManager.addLoop(new Renderer(threadManager, 60, renderType));
     }
 
     public synchronized void addState(State state) {

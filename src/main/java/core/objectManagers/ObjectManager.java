@@ -2,6 +2,7 @@ package core.objectManagers;
 
 import core.loading.Resource;
 import core.objects.Object;
+import core.CinderEngine.RenderType;
 
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,9 +24,9 @@ public abstract class ObjectManager implements Resource {
         while (it.hasNext()) it.next().init();
     }
 
-    private void renderObjects() {
+    private void renderObjects(RenderType renderType) {
         Iterator<Object> it = sharedObjects.iterator();
-        while (it.hasNext()) it.next().render();
+        while (it.hasNext()) it.next().render(renderType);
     }
 
     private void updateObjects() {
@@ -41,8 +42,8 @@ public abstract class ObjectManager implements Resource {
         updateObjects();
     }
 
-    public synchronized void render() {
-        renderObjects();
+    public synchronized void render(RenderType renderType) {
+        renderObjects(renderType);
     }
 
     public void cleanUp() {

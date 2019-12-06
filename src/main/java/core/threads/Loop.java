@@ -1,11 +1,15 @@
 package core.threads;
 
+import core.CinderEngine.RenderType;
+
 public abstract class Loop implements Runnable, LoopInterface {
 
     private final double SECOND = 1000000000;
     private final double MAX_TPS;
     private final String name;
     private final FairLock lock = new FairLock();
+    
+    protected final RenderType renderType;
 
     protected volatile ThreadManager threadManager;
 
@@ -17,10 +21,11 @@ public abstract class Loop implements Runnable, LoopInterface {
     private volatile boolean running = false;
     private volatile boolean closed = false;
 
-    public Loop(ThreadManager threadManager, double MAX_TPS, String name) {
+    public Loop(ThreadManager threadManager, double MAX_TPS, String name, RenderType renderType) {
         this.name = name.toUpperCase();
         this.threadManager = threadManager;
         this.MAX_TPS = MAX_TPS;
+        this.renderType = renderType;
     }
 
     public abstract void init();
