@@ -13,7 +13,7 @@ public class TestObject extends Entity {
     }
 
     @Override
-    public void init() {
+    public void init(RenderType renderType) {
         System.out.println("Object " + initCounter + "  initialised.");
         initCounter++;
     }
@@ -24,7 +24,7 @@ public class TestObject extends Entity {
     }
 
     @Override
-    public void update() {
+    public void update(RenderType renderType) {
         ///System.out.println("TEST OBJECT UPDATE");
     }
 

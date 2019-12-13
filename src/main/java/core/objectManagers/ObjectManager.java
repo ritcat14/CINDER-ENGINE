@@ -19,9 +19,9 @@ public abstract class ObjectManager implements Resource {
         sharedObjects.remove(object);
     }
 
-    private void initObjects() {
+    private void initObjects(RenderType renderType) {
         Iterator<Object> it = sharedObjects.iterator();
-        while (it.hasNext()) it.next().init();
+        while (it.hasNext()) it.next().init(renderType);
     }
 
     private void renderObjects(RenderType renderType) {
@@ -29,17 +29,17 @@ public abstract class ObjectManager implements Resource {
         while (it.hasNext()) it.next().render(renderType);
     }
 
-    private void updateObjects() {
+    private void updateObjects(RenderType renderType) {
         Iterator<Object> it = sharedObjects.iterator();
-        while (it.hasNext()) it.next().update();
+        while (it.hasNext()) it.next().update(renderType);
     }
 
-    public synchronized void init() {
-        initObjects();
+    public synchronized void init(RenderType renderType) {
+        initObjects(renderType);
     }
 
-    public synchronized void update() {
-        updateObjects();
+    public synchronized void update(RenderType renderType) {
+        updateObjects(renderType);
     }
 
     public synchronized void render(RenderType renderType) {

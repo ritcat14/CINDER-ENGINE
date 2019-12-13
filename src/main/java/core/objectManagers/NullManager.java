@@ -1,5 +1,6 @@
 package core.objectManagers;
 
+import core.CinderEngine.RenderType;
 import core.objects.Object;
 
 public class NullManager extends ObjectManager {
@@ -15,15 +16,15 @@ public class NullManager extends ObjectManager {
     }
 
     @Override
-    public synchronized void init() {
+    public synchronized void init(RenderType renderType) {
     }
 
     @Override
-    public synchronized void update() {
+    public synchronized void update(RenderType renderType) {
     }
 
     @Override
-    public synchronized void render() {
+    public synchronized void render(RenderType renderType) {
     }
 
 }

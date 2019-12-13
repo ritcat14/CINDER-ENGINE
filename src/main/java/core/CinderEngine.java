@@ -9,18 +9,17 @@ import core.threads.ThreadManager;
 import core.threads.Updater;
 
 public class CinderEngine {
-    
+
     public static enum RenderType {
-        3D, 2D;
+        T2D, T3D;
     }
 
     public static double WIDTH, HEIGHT, ASPECT_RATIO;
-    
+
     private final RenderType renderType;
 
     private ThreadManager threadManager;
     private StateManager stateManager;
-    private RenderType renderType;
 
     public CinderEngine(double width, double height, RenderType renderType) {
         WIDTH = width;

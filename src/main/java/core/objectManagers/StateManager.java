@@ -53,16 +53,16 @@ public class StateManager extends ObjectManager {
         super.removeObject(state);
     }
 
-    public void init() {
+    public void init(RenderType renderType) {
         if (currentState == null) return;
-        currentState.init();
+        currentState.init(renderType);
     }
 
     @Override
-    public void update() {
+    public void update(RenderType renderType) {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) setCurrentState(currentState.getRequestedState());
-        currentState.update();
+        currentState.update(renderType);
     }
 
     @Override

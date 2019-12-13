@@ -79,7 +79,7 @@ public class Window {
     }
 
     public synchronized void render(RenderType renderType) {
-        if (renderType == RenderType.3D) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if (renderType == RenderType.T3D) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         else glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0f, 0.3f, 0.8f, 0.0f);
         glfwSwapBuffers(ID);

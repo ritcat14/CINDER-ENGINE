@@ -25,15 +25,15 @@ public class ThreadManager implements Object {
     }
 
     @Override
-    public void init() {
+    public void init(RenderType renderType) {
         window = new Window(width, height);
     }
 
-    public synchronized void update() {
+    public synchronized void update(RenderType renderType) {
         if (window == null) return;
         window.setThread();
         window.update();
-        stateManager.update();
+        stateManager.update(renderType);
         window.nullThread();
     }
 

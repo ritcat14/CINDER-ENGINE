@@ -22,12 +22,12 @@ public abstract class State implements Object {
     }
 
     @Override
-    public void update() {
-        objectManager.update();
+    public void update(RenderType renderType) {
+        objectManager.update(renderType);
     }
 
     @Override
-    public void render(RednerType renderType) {
+    public void render(RenderType renderType) {
         objectManager.render(renderType);
     }
 
