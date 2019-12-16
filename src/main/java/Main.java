@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class Main {
 
-    private static double WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-    private static double HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
+    private static double WIDTH = 1920;
+    private static double HEIGHT = 1080;
 
     public static void main(String[] args) {
         CinderEngine cinderEngine = new CinderEngine(WIDTH, HEIGHT, RenderType.T2D);
