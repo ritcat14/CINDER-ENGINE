@@ -21,7 +21,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 
     private long ID;
-    private volatile boolean shouldClose = false;
 
     public Window(double width, double height) {
         GLFWErrorCallback.createThrow().set();

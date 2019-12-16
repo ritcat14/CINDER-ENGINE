@@ -16,15 +16,12 @@ public class CinderEngine {
 
     public static double WIDTH, HEIGHT, ASPECT_RATIO;
 
-    private final RenderType renderType;
-
     private ThreadManager threadManager;
     private StateManager stateManager;
 
     public CinderEngine(double width, double height, RenderType renderType) {
         WIDTH = width;
         HEIGHT = height;
-        this.renderType = renderType;
         ASPECT_RATIO = width/height;
         threadManager = new ThreadManager(width, height);
         stateManager = threadManager.getStateManager();

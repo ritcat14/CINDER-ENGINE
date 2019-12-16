@@ -2,8 +2,8 @@ package core.graphics.gl;
 
 import files.FileReader;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 import static org.lwjgl.opengl.GL20.glCreateProgram;
 
@@ -11,8 +11,8 @@ public abstract class Shader {
 
     private final int ID;
     protected String[] attributes;
-    private List<Integer> shaders = new ArrayList<>();
-    private boolean bound = false;
+    //private List<Integer> shaders = new ArrayList<>();
+    //private boolean bound = false;
 
     public Shader(String fileName) {
         ID = glCreateProgram();
