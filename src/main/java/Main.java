@@ -13,7 +13,7 @@ public class Main {
     private static double HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
     public static void main(String[] args) {
-        CinderEngine cinderEngine = new CinderEngine(WIDTH, HEIGHT, RenderType.T2D);
+        CinderEngine cinderEngine = new CinderEngine(WIDTH, HEIGHT, RenderType.valueOf(RenderType.class, args[0]));
         cinderEngine.addState(new Start(new NullManager()));
         cinderEngine.addState(new Game(new EntityManager()));
         cinderEngine.setState("start");
