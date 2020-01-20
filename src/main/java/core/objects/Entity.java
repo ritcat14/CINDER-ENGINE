@@ -5,6 +5,8 @@ import org.joml.Vector3f;
 
 public abstract class Entity implements Object {
 
+    private boolean removed = false;
+
     private Vector3f position;
     private Vector3f rotation;
     private Vector3f scale;
@@ -43,5 +45,13 @@ public abstract class Entity implements Object {
 
     public void setScale(Vector3f scale) {
         this.scale = scale;
+    }
+
+    public void remove() {
+        removed = true;
+    }
+
+    public boolean isRemoved() {
+        return removed;
     }
 }

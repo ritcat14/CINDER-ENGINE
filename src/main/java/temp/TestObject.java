@@ -2,7 +2,6 @@ package temp;
 
 import core.objects.Entity;
 import org.joml.Vector3f;
-import core.CinderEngine.RenderType;
 
 public class TestObject extends Entity {
 
@@ -13,7 +12,7 @@ public class TestObject extends Entity {
     }
 
     @Override
-    public void init(RenderType renderType) {
+    public void init() {
         System.out.println("Object " + initCounter + "  initialised.");
         initCounter++;
     }
@@ -24,12 +23,12 @@ public class TestObject extends Entity {
     }
 
     @Override
-    public void update(RenderType renderType) {
-        ///System.out.println("TEST OBJECT UPDATE");
+    public void update() {
+        updateTransformation();
     }
 
     @Override
-    public void render(RenderType renderType) {
-        //System.out.println("TEST OBJECT RENDER");
+    public void render() {
+
     }
 }

@@ -2,7 +2,6 @@ package temp;
 
 import core.objectManagers.ObjectManager;
 import core.states.State;
-import core.CinderEngine.RenderType;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
 
@@ -13,14 +12,14 @@ public class Game extends State {
     }
 
     @Override
-    public void init(RenderType renderType) {
+    public void init() {
         System.out.println("Initiating game state");
         for (int i = 0; i < 10; i++) objectManager.addObject(new TestObject());
     }
 
     @Override
-    public void render(RenderType renderType) {
+    public void render() {
         glClearColor(1.0f, 0f, 0f, 0.0f);
-        super.render(renderType);
+        super.render();
     }
 }

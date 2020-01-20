@@ -1,7 +1,6 @@
 package core.threads;
 
 import core.loading.Resource;
-import core.CinderEngine.RenderType;
 
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -11,8 +10,8 @@ public class Loader extends Loop {
     private CopyOnWriteArrayList<Resource> resources = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Resource> resourcesToRemove = new CopyOnWriteArrayList<>();
 
-    public Loader(ThreadManager threadManager, RenderType renderType) {
-        super(threadManager, 60, "LOADER", renderType);
+    public Loader(ThreadManager threadManager) {
+        super(threadManager, 60, "LOADER");
     }
 
     public synchronized void addResources(CopyOnWriteArrayList<Resource> resources) {
@@ -21,7 +20,8 @@ public class Loader extends Loop {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public void onLoop() {
@@ -29,7 +29,7 @@ public class Loader extends Loop {
         Iterator<Resource> it = resources.iterator();
         while (it.hasNext()) {
             Resource resource = it.next();
-            resource.init(renderType);
+            resource.init();
             resourcesToRemove.add(resource);
         }
         resources.removeAll(resourcesToRemove);

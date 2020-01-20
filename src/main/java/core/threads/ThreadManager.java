@@ -1,10 +1,10 @@
 package core.threads;
 
+import core.CinderEngine;
 import core.graphics.Window;
 import core.loading.Resource;
 import core.objectManagers.StateManager;
 import core.objects.Object;
-import core.CinderEngine.RenderType;
 
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,23 +25,23 @@ public class ThreadManager implements Object {
     }
 
     @Override
-    public void init(RenderType renderType) {
+    public void init() {
         window = new Window(width, height);
     }
 
-    public synchronized void update(RenderType renderType) {
+    public synchronized void update() {
         if (window == null) return;
         window.setThread();
         window.update();
-        stateManager.update(renderType);
+        stateManager.update();
         window.nullThread();
     }
 
-    public synchronized void render(RenderType renderType) {
+    public synchronized void render() {
         if (window == null) return;
         window.setThread();
-        window.render(renderType);
-        stateManager.render(renderType);
+        window.render();
+        stateManager.render();
         checkClosing();
         window.nullThread();
     }
@@ -81,7 +81,8 @@ public class ThreadManager implements Object {
     }
 
     private synchronized void checkClosing() {
-        if (window.shouldClose()) {
+        if (CinderEngine.CLOSED || window.shouldClose()) {
+            CinderEngine.CLOSE();
             Iterator<Loop> it = loops.iterator();
             while (it.hasNext()) it.next().stopRunning();
         }

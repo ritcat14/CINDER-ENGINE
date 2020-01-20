@@ -1,7 +1,5 @@
 package core.graphics;
 
-import core.CinderEngine.RenderType;
-
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -21,7 +19,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 
     private long ID;
-    private volatile boolean shouldClose = false;
 
     public Window(double width, double height) {
         GLFWErrorCallback.createThrow().set();
@@ -78,9 +75,8 @@ public class Window {
         glfwShowWindow(ID);
     }
 
-    public synchronized void render(RenderType renderType) {
-        if (renderType == RenderType.T3D) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        else glClear(GL_COLOR_BUFFER_BIT);
+    public synchronized void render() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 0.3f, 0.8f, 0.0f);
         glfwSwapBuffers(ID);
     }
@@ -96,4 +92,6 @@ public class Window {
     public long getID() {
         return ID;
     }
+
+
 }

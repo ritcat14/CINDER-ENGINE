@@ -3,7 +3,6 @@ package core.objectManagers;
 import core.objects.Object;
 import core.states.State;
 import core.threads.ThreadManager;
-import core.CinderEngine.RenderType;
 
 import java.util.Iterator;
 
@@ -40,6 +39,7 @@ public class StateManager extends ObjectManager {
     }
 
     private void changeState(State state) {
+        System.out.println("Setting state to: " + state.getStateName());
         currentState = state;
         threadManager.addResource(currentState);
         threadManager.addResource(currentState.getObjectManager());
@@ -50,26 +50,40 @@ public class StateManager extends ObjectManager {
     }
 
     public synchronized void removeState(State state) {
+        System.out.println("Removed state " + currentStateName);
         super.removeObject(state);
     }
 
-    public void init(RenderType renderType) {
+    public void init() {
         if (currentState == null) return;
-        currentState.init(renderType);
+        currentState.init();
     }
 
     @Override
-    public void update(RenderType renderType) {
+    public void update() {
         if (currentState == null) return;
+        /*if (currentState.isRemoved()) {
+            removeState(currentState);
+
+            Iterator<Object> it = sharedObjects.iterator();
+            State state1;
+            if (it.hasNext()) {
+                state1 = ((State) it.next());
+                setCurrentState(state1.getStateName());
+            } else {
+                System.out.println("No states left, closing application");
+                CinderEngine.CLOSE();
+            }
+        }*/
         if (currentState.hasRequestedChange()) setCurrentState(currentState.getRequestedState());
-        currentState.update(renderType);
+        currentState.update();
     }
 
     @Override
-    public void render(RenderType renderType) {
+    public void render() {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
-        currentState.render(renderType);
+        currentState.render();
     }
 
     @Override

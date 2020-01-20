@@ -6,7 +6,6 @@ package core.states;
 
 import core.objectManagers.ObjectManager;
 import core.objects.Object;
-import core.CinderEngine.RenderType;
 
 public abstract class State implements Object {
 
@@ -22,13 +21,13 @@ public abstract class State implements Object {
     }
 
     @Override
-    public void update(RenderType renderType) {
-        objectManager.update(renderType);
+    public void update() {
+        objectManager.update();
     }
 
     @Override
-    public void render(RenderType renderType) {
-        objectManager.render(renderType);
+    public void render() {
+        objectManager.render();
     }
 
     public void requestChange(String stateName) {

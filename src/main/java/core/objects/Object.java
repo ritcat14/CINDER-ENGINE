@@ -1,12 +1,14 @@
 package core.objects;
 
 import core.loading.Resource;
-import core.CinderEngine.RenderType;
 
 public interface Object extends Resource {
 
-    void update(RenderType renderType);
+    @Override
+    void init();
 
-    void render(RenderType renderType);
+    void update();
+
+    void render();
 
 }

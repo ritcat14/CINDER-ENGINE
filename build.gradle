@@ -19,6 +19,8 @@ jar {
     }
 }
 
+run {}
+
 repositories {
     flatDir {
         dirs 'libs'

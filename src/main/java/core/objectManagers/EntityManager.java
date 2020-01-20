@@ -1,6 +1,5 @@
 package core.objectManagers;
 
-import core.CinderEngine.RenderType;
 import core.objects.Entity;
 import core.objects.Object;
 
@@ -12,9 +11,9 @@ public class EntityManager extends ObjectManager {
     }
 
     @Override
-    public void update(RenderType renderType) {
+    public void update() {
         Iterator<Object> it = sharedObjects.iterator();
         while (it.hasNext()) ((Entity) it.next()).updateTransformation();
-        super.update(renderType);
+        super.update();
     }
 }
