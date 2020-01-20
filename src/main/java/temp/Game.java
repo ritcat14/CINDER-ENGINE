@@ -14,7 +14,12 @@ public class Game extends State {
     @Override
     public void init() {
         System.out.println("Initiating game state");
-        for (int i = 0; i < 10; i++) objectManager.addObject(new TestObject());
+        for (int i = 0; i < 10; i++) objectManager.addResource(new TestObject());
+    }
+
+    @Override
+    public void update() {
+        super.update();
     }
 
     @Override

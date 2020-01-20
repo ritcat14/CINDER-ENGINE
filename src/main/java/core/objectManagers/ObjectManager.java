@@ -6,9 +6,14 @@ import core.objects.Object;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class ObjectManager implements Resource {
+public abstract class ObjectManager {
 
     protected CopyOnWriteArrayList<Object> sharedObjects = new CopyOnWriteArrayList<>();
+    protected CopyOnWriteArrayList<Resource> sharedResources = new CopyOnWriteArrayList<>();
+
+    public synchronized void addResource(Resource resource) {
+        sharedResources.add(resource);
+    }
 
     public synchronized void addObject(Object object) {
         sharedObjects.add(object);
@@ -18,22 +23,29 @@ public abstract class ObjectManager implements Resource {
         sharedObjects.remove(object);
     }
 
-    private void initObjects() {
-        Iterator<Object> it = sharedObjects.iterator();
-        while (it.hasNext()) it.next().init();
+    private boolean initObjects() {
+        Iterator<Resource> it = sharedResources.iterator();
+        boolean passed = true;
+        while (it.hasNext()) {
+            if (it.next() instanceof Object) {
+                if (it.next().isInitialised()) {
+                    addObject((Object) it.next());
+                    it.remove();
+                } else passed = false;
+            } else it.next().init();
+        }
+        return passed;
     }
 
     private void renderObjects() {
-        Iterator<Object> it = sharedObjects.iterator();
-        while (it.hasNext()) it.next().render();
+        for (Object sharedObject : sharedObjects) sharedObject.render();
     }
 
     private void updateObjects() {
-        Iterator<Object> it = sharedObjects.iterator();
-        while (it.hasNext()) it.next().update();
+        for (Object sharedObject : sharedObjects) sharedObject.update();
     }
 
-    public synchronized void init() {
+    public void init() {
         initObjects();
     }
 

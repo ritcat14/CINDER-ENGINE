@@ -1,10 +1,7 @@
 package core.objects;
 
-import core.loading.Resource;
+public interface Object {
 
-public interface Object extends Resource {
-
-    @Override
     void init();
 
     void update();

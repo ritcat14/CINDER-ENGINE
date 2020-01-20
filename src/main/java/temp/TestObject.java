@@ -13,6 +13,7 @@ public class TestObject extends Entity {
 
     @Override
     public void init() {
+        super.init();
         System.out.println("Object " + initCounter + "  initialised.");
         initCounter++;
     }

@@ -42,17 +42,13 @@ public class CinderEngine {
     }
 
     private void mainLoop() {
-        while (true) {
-            threadManager.checkThreads();
+        //noinspection StatementWithEmptyBody
+        while (threadManager.checkThreads()) {
         }
     }
 
     private void init() {
         FileCache.init();
-    }
-
-    public ThreadManager getThreadManager() {
-        return threadManager;
     }
 
     public static void CLOSE() {

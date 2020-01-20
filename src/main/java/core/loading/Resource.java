@@ -1,5 +1,14 @@
 package core.loading;
 
-public interface Resource {
-    void init();
+public abstract class Resource {
+
+    private boolean initialised = false;
+
+    public void init() {
+        initialised = true;
+    }
+
+    public boolean isInitialised() {
+        return initialised;
+    }
 }

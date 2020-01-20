@@ -6,7 +6,6 @@ import core.loading.Resource;
 import core.objectManagers.StateManager;
 import core.objects.Object;
 
-import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ThreadManager implements Object {
@@ -65,26 +64,23 @@ public class ThreadManager implements Object {
 
     public synchronized Loop getLoop(String name) {
         name = name.toUpperCase();
-        Iterator<Loop> it = loops.iterator();
-        while (it.hasNext()) {
-            Loop loop = it.next();
+        for (Loop loop : loops) {
             if (loop.getName().equals(name)) return loop;
         }
         throw new NullPointerException("Cannot find loop " + name);
     }
 
-    public void checkThreads() {
-        Iterator<Loop> it = loops.iterator();
-        while (it.hasNext()) if (!it.next().isClosed()) return;
+    public boolean checkThreads() {
+        for (Loop loop : loops) if (!loop.isClosed()) return true;
         System.out.println("Closing Game.");
         System.exit(0);
+        return false;
     }
 
     private synchronized void checkClosing() {
         if (CinderEngine.CLOSED || window.shouldClose()) {
             CinderEngine.CLOSE();
-            Iterator<Loop> it = loops.iterator();
-            while (it.hasNext()) it.next().stopRunning();
+            for (Loop loop : loops) loop.stopRunning();
         }
     }
 
@@ -105,18 +101,15 @@ public class ThreadManager implements Object {
     }
 
     public synchronized void startLoops() {
-        Iterator<Loop> it = loops.iterator();
-        while (it.hasNext()) it.next().start();
+        for (Loop loop : loops) loop.start();
     }
 
     public synchronized void stopLoops() {
-        Iterator<Loop> it = loops.iterator();
-        while (it.hasNext()) it.next().stop();
+        for (Loop loop : loops) loop.stop();
     }
 
     public synchronized void stopLoopsRunning() {
-        Iterator<Loop> it = loops.iterator();
-        while (it.hasNext()) it.next().stopRunning();
+        for (Loop loop : loops) loop.stopRunning();
     }
 
 }

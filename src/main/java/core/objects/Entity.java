@@ -1,9 +1,10 @@
 package core.objects;
 
+import core.loading.Resource;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public abstract class Entity implements Object {
+public abstract class Entity extends Resource implements Object {
 
     private boolean removed = false;
 
