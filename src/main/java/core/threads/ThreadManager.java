@@ -6,14 +6,15 @@ import core.loading.Resource;
 import core.objectManagers.StateManager;
 import core.objects.Object;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.awt.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ThreadManager implements Object {
+public class ThreadManager extends Object {
 
     private final double width, height;
 
-    private CopyOnWriteArrayList<Loop> loops = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Resource> resources = new CopyOnWriteArrayList<>();
+    private ConcurrentLinkedQueue<Loop> loops = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Resource> resources = new ConcurrentLinkedQueue<>();
     private Window window;
     private StateManager stateManager;
 
@@ -30,19 +31,18 @@ public class ThreadManager implements Object {
 
     public synchronized void update() {
         if (window == null) return;
-        window.setThread();
         window.update();
         stateManager.update();
-        window.nullThread();
+    }
+
+    @Override
+    public void render(Graphics graphics) {
     }
 
     public synchronized void render() {
         if (window == null) return;
-        window.setThread();
-        window.render();
-        stateManager.render();
+        window.render(stateManager);
         checkClosing();
-        window.nullThread();
     }
 
     public synchronized void addResource(Resource resource) {

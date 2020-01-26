@@ -1,35 +1,51 @@
 package temp;
 
+import core.graphics.Window;
 import core.objects.Entity;
-import org.joml.Vector3f;
+
+import java.awt.*;
+import java.util.Random;
 
 public class TestObject extends Entity {
 
     private static int initCounter = 0;
+    private int id, dir;
 
-    public TestObject() {
-        super(new Vector3f(), new Vector3f(), new Vector3f(1f, 1f, 1f));
+    public TestObject(int id) {
+        super(100, 100, 50, 50);
+        this.id = id;
+        dir = new Random().nextInt(4);
     }
 
     @Override
     public void init() {
         super.init();
-        System.out.println("Object " + initCounter + "  initialised.");
+        System.out.println("Object " + id + ": " + initCounter + "  initialised.");
         initCounter++;
     }
 
     @Override
-    public void updateTransformation() {
-        //System.out.println("UPDATING TRANSFORM");
-    }
-
-    @Override
     public void update() {
-        updateTransformation();
+        switch (dir) {
+            case 0:
+                y--;
+                break;
+            case 1:
+                x++;
+                break;
+            case 2:
+                y++;
+                break;
+            case 3:
+                x--;
+                break;
+        }
+        if (x < 0 || y < 0 || x > Window.getWindowWidth() - width || y > Window.getWindowHeight() - height) remove();
     }
 
     @Override
-    public void render() {
-
+    public void render(Graphics graphics) {
+        graphics.setColor(Color.BLUE);
+        super.render(graphics);
     }
 }

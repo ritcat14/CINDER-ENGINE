@@ -7,7 +7,9 @@ package core.states;
 import core.objectManagers.ObjectManager;
 import core.objects.Object;
 
-public abstract class State implements Object {
+import java.awt.*;
+
+public abstract class State extends Object {
 
     private volatile boolean requestedChange = false;
     private volatile String requestedState = "";
@@ -15,19 +17,22 @@ public abstract class State implements Object {
     protected ObjectManager objectManager; // For allowing the state to handle it's own objects
     protected String stateName;
 
-    public State(ObjectManager objectManager, String stateName) {
-        this.objectManager = objectManager;
+    public State(String stateName) {
         this.stateName = stateName;
+    }
+
+    public void setObjectManager(ObjectManager objectManager) {
+        this.objectManager = objectManager;
     }
 
     @Override
     public void update() {
-        objectManager.update();
+        if (objectManager != null) objectManager.update();
     }
 
     @Override
-    public void render() {
-        objectManager.render();
+    public void render(Graphics graphics) {
+        if (objectManager != null) objectManager.render(graphics);
     }
 
     public void requestChange(String stateName) {
@@ -38,10 +43,6 @@ public abstract class State implements Object {
     public synchronized void changed() {
         requestedChange = false;
         requestedState = "";
-    }
-
-    public synchronized ObjectManager getObjectManager() {
-        return objectManager;
     }
 
     public synchronized boolean hasRequestedChange() {
@@ -57,7 +58,7 @@ public abstract class State implements Object {
     }
 
     public void cleanUp() {
-        objectManager.cleanUp();
+        if (objectManager != null) objectManager.cleanUp();
     }
 
 }

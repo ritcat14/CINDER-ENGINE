@@ -1,20 +1,23 @@
 package temp;
 
-import core.objectManagers.ObjectManager;
+import core.graphics.Window;
+import core.graphics.gui.GuiPanel;
 import core.states.State;
 
-import static org.lwjgl.opengl.GL11.glClearColor;
+import java.awt.*;
+
 
 public class Game extends State {
 
-    public Game(ObjectManager objectManager) {
-        super(objectManager, "game");
+    public Game() {
+        super("game");
     }
 
     @Override
     public void init() {
         System.out.println("Initiating game state");
-        for (int i = 0; i < 10; i++) objectManager.addResource(new TestObject());
+        objectManager.addResource(new GuiPanel(0, 0, 200, Window.getWindowHeight(), Color.GRAY));
+        for (int i = 0; i < 10; i++) objectManager.addResource(new TestObject(i));
     }
 
     @Override
@@ -23,8 +26,9 @@ public class Game extends State {
     }
 
     @Override
-    public void render() {
-        glClearColor(1.0f, 0f, 0f, 0.0f);
-        super.render();
+    public void render(Graphics graphics) {
+        graphics.setColor(Color.CYAN);
+        graphics.fillRect(0, 0, (int) Window.getWindowWidth(), (int) Window.getWindowHeight());
+        super.render(graphics);
     }
 }

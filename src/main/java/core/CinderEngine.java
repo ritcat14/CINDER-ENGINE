@@ -42,7 +42,6 @@ public class CinderEngine {
     }
 
     private void mainLoop() {
-        //noinspection StatementWithEmptyBody
         while (threadManager.checkThreads()) {
         }
     }

@@ -1,63 +1,81 @@
 package core.objectManagers;
 
+import core.graphics.gui.GuiComponent;
 import core.loading.Resource;
 import core.objects.Object;
 
+import java.awt.*;
 import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-public abstract class ObjectManager {
+public class ObjectManager {
 
-    protected CopyOnWriteArrayList<Object> sharedObjects = new CopyOnWriteArrayList<>();
-    protected CopyOnWriteArrayList<Resource> sharedResources = new CopyOnWriteArrayList<>();
+    private ConcurrentLinkedQueue<Object> sharedObjects = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Resource> sharedResources = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Object> guiComponents = new ConcurrentLinkedQueue<Object>();
 
     public synchronized void addResource(Resource resource) {
         sharedResources.add(resource);
     }
 
-    public synchronized void addObject(Object object) {
+    protected synchronized void addObject(Object object) {
         sharedObjects.add(object);
     }
 
-    public synchronized void removeObject(Object object) {
-        sharedObjects.remove(object);
-    }
-
-    private boolean initObjects() {
+    private void updateResources() {
         Iterator<Resource> it = sharedResources.iterator();
-        boolean passed = true;
         while (it.hasNext()) {
-            if (it.next() instanceof Object) {
-                if (it.next().isInitialised()) {
-                    addObject((Object) it.next());
+            Resource resource = it.next();
+            if (resource instanceof Object) {
+                if (resource.isInitialised()) {
+                    if (resource instanceof GuiComponent) guiComponents.add((GuiComponent) resource);
+                    else addObject((Object) resource);
                     it.remove();
-                } else passed = false;
-            } else it.next().init();
+                }
+            }
         }
-        return passed;
     }
 
-    private void renderObjects() {
-        for (Object sharedObject : sharedObjects) sharedObject.render();
+    private void renderObjects(Graphics graphics) {
+        for (Object sharedObject : sharedObjects) sharedObject.render(graphics);
+        for (Object guiComponent : guiComponents) guiComponent.render(graphics);
+    }
+
+    private void checkList(ConcurrentLinkedQueue<Object> list) {
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            Object object = (Object) it.next();
+            if (object.isRemoved()) it.remove();
+        }
     }
 
     private void updateObjects() {
+        updateResources();
+        checkList(guiComponents);
+        checkList(sharedObjects);
         for (Object sharedObject : sharedObjects) sharedObject.update();
-    }
-
-    public void init() {
-        initObjects();
+        for (Object guiComponent : guiComponents) guiComponent.update();
     }
 
     public synchronized void update() {
         updateObjects();
     }
 
-    public synchronized void render() {
-        renderObjects();
+    public synchronized void render(Graphics graphics) {
+        renderObjects(graphics);
+    }
+
+    public ConcurrentLinkedQueue<Object> getSharedObjects() {
+        return sharedObjects;
+    }
+
+    public ConcurrentLinkedQueue<Resource> getSharedResources() {
+        return sharedResources;
     }
 
     public void cleanUp() {
         sharedObjects.clear();
+        sharedResources.clear();
+        guiComponents.clear();
     }
 }

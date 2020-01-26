@@ -1,11 +1,23 @@
 package core.objects;
 
-public interface Object {
+import core.loading.Resource;
 
-    void init();
+import java.awt.*;
 
-    void update();
+public abstract class Object extends Resource {
 
-    void render();
+    boolean removed = false;
+
+    public abstract void update();
+
+    public abstract void render(Graphics graphics);
+
+    public void remove() {
+        removed = true;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
 
 }

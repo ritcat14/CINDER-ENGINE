@@ -4,23 +4,25 @@ import core.objects.Object;
 import core.states.State;
 import core.threads.ThreadManager;
 
+import java.awt.*;
+
 public class StateManager extends ObjectManager {
+
+    private ObjectManager objectManager;
 
     private volatile String currentStateName;
     private volatile State currentState;
 
     private ThreadManager threadManager;
 
-    private boolean addedResources = false;
-    private int time = 0, resourceCount = 0;
-
     public StateManager(ThreadManager threadManager) {
         this.threadManager = threadManager;
+        objectManager = new ObjectManager();
     }
 
     public synchronized void setCurrentState(String stateName) {
         if (currentStateName != null && currentStateName.equals(stateName)) return;
-        for (Object sharedObject : sharedObjects) {
+        for (Object sharedObject : getSharedObjects()) {
             State state1 = ((State) sharedObject);
             if (state1.getStateName().equals(stateName)) {
                 if (currentState != null) {
@@ -41,6 +43,7 @@ public class StateManager extends ObjectManager {
     private void changeState(State state) {
         System.out.println("Setting state to: " + state.getStateName());
         currentState = state;
+        currentState.setObjectManager(objectManager);
         currentState.init();
     }
 
@@ -48,30 +51,13 @@ public class StateManager extends ObjectManager {
         super.addObject(state);
     }
 
-    public synchronized void removeState(State state) {
-        System.out.println("Removed state " + currentStateName);
-        super.removeObject(state);
-    }
-
-    @Override
-    public synchronized void init() {
-        super.init();
-        if (currentState == null) return;
-        currentState.init();
-    }
-
     @Override
     public void update() {
         if (currentState == null) return;
-        System.out.println(currentState.getObjectManager().sharedObjects.size());
-        if (!addedResources && resourceCount < currentState.getObjectManager().sharedResources.size() - 1) {
-            time++;
-            if (time % (120 * 10) == 0) {
-                resourceCount++;
-                threadManager.addResource(currentState.getObjectManager().sharedResources.get(resourceCount));
-            }
-        } else if (resourceCount + 1 == currentState.getObjectManager().sharedResources.size()) addedResources = true;
-        /*if (currentState.isRemoved()) {
+        if (objectManager.getSharedResources().size() > 0) {
+            threadManager.addResource(objectManager.getSharedResources().iterator().next());
+        }/*
+        if (currentState.isRemoved()) {
             removeState(currentState);
 
             Iterator<Object> it = sharedObjects.iterator();
@@ -89,10 +75,10 @@ public class StateManager extends ObjectManager {
     }
 
     @Override
-    public void render() {
+    public void render(Graphics graphics) {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
-        currentState.render();
+        currentState.render(graphics);
     }
 
     @Override
@@ -100,8 +86,7 @@ public class StateManager extends ObjectManager {
     public synchronized void addObject(Object object) {
     }
 
-    @Override
-    @Deprecated
-    public synchronized void removeObject(Object object) {
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 }

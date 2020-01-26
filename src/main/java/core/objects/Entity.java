@@ -1,51 +1,22 @@
 package core.objects;
 
-import core.loading.Resource;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import java.awt.*;
 
-public abstract class Entity extends Resource implements Object {
+public abstract class Entity extends Object {
 
-    private boolean removed = false;
+    protected double x, y;
+    protected double width, height;
 
-    private Vector3f position;
-    private Vector3f rotation;
-    private Vector3f scale;
-
-    protected final Vector3f up = new Vector3f(0, 1, 0);
-
-    protected Matrix4f transformation;
-
-    public Entity(Vector3f position, Vector3f rotation, Vector3f scale) {
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
+    public Entity(double x, double y, double width, double height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
-    public abstract void updateTransformation();
-
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector3f position) {
-        this.position = position;
-    }
-
-    public Vector3f getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(Vector3f rotation) {
-        this.rotation = rotation;
-    }
-
-    public Vector3f getScale() {
-        return scale;
-    }
-
-    public void setScale(Vector3f scale) {
-        this.scale = scale;
+    @Override
+    public void render(Graphics graphics) {
+        graphics.fillRect((int) x, (int) y, (int) width, (int) height);
     }
 
     public void remove() {
