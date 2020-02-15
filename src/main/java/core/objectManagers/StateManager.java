@@ -29,6 +29,7 @@ public class StateManager extends ObjectManager implements EventListener {
             if (state1.getStateName().equals(stateName)) {
                 if (currentState != null) {
                     currentState.cleanUp();
+                    currentState.deinitialise();
                     if (currentState.hasRequestedChange()) {
                         State preState = currentState;
                         changeState(state1);
@@ -46,7 +47,6 @@ public class StateManager extends ObjectManager implements EventListener {
         System.out.println("Setting state to: " + state.getStateName());
         currentState = state;
         currentState.setObjectManager(objectManager);
-        currentState.init();
     }
 
     public synchronized void addState(State state) {
@@ -56,6 +56,11 @@ public class StateManager extends ObjectManager implements EventListener {
     @Override
     public void update() {
         if (currentState == null) return;
+
+        if (!currentState.isInitialised()) {
+            currentState.init();
+        }
+
         if (objectManager.getSharedResources().size() > 0) {
             threadManager.addResource(objectManager.getSharedResources().iterator().next());
         }/*

@@ -8,6 +8,10 @@ public abstract class Resource {
         initialised = true;
     }
 
+    public void deinitialise() {
+        initialised = false;
+    }
+
     public boolean isInitialised() {
         return initialised;
     }
