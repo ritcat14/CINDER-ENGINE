@@ -21,6 +21,10 @@ public class ObjectManager implements EventListener {
         sharedResources.add(resource);
     }
 
+    public synchronized void addResources(List<Resource> resources) {
+        sharedResources.addAll(resources);
+    }
+
     protected synchronized void addObject(Object object) {
         sharedObjects.add(object);
     }
