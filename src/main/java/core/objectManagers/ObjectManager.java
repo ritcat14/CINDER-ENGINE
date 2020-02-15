@@ -1,7 +1,6 @@
 package core.objectManagers;
 
 import core.events.Event;
-import core.events.EventHandler;
 import core.events.EventListener;
 import core.graphics.gui.GuiComponent;
 import core.loading.Resource;
@@ -9,6 +8,7 @@ import core.objects.Object;
 
 import java.awt.*;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ObjectManager implements EventListener {
@@ -23,6 +23,10 @@ public class ObjectManager implements EventListener {
 
     protected synchronized void addObject(Object object) {
         sharedObjects.add(object);
+    }
+
+    protected synchronized void addObjects(List<Object> objectList) {
+        sharedObjects.addAll(objectList);
     }
 
     private void updateResources() {
