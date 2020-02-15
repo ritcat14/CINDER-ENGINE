@@ -6,8 +6,6 @@ import core.graphics.gui.GuiButton;
 import core.states.State;
 import files.ImageTools;
 
-import java.awt.*;
-
 public class Start extends State {
 
     public Start() {

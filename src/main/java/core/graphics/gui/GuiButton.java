@@ -2,13 +2,12 @@ package core.graphics.gui;
 
 import core.events.Event;
 import core.events.EventDispatcher;
-import core.events.EventListener;
 import core.events.types.MouseEventFired;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class GuiButton extends GuiPanel implements EventListener {
+public class GuiButton extends GuiPanel {
 
     private BufferedImage background, foreground;
     private Color backgroundColour, foregroundColour;

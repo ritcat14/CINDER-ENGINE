@@ -19,10 +19,6 @@ public class GuiPanel extends GuiComponent {
     }
 
     @Override
-    public void update() {
-    }
-
-    @Override
     public void render(Graphics graphics) {
         graphics.setColor(color);
         super.render(graphics);
