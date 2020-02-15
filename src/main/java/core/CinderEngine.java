@@ -17,6 +17,7 @@ public class CinderEngine {
     private StateManager stateManager;
 
     public CinderEngine(double width, double height) {
+        FileCache.init();
         WIDTH = width;
         HEIGHT = height;
         ASPECT_RATIO = width / height;
@@ -36,7 +37,6 @@ public class CinderEngine {
     }
 
     public void start() {
-        init();
         threadManager.startLoops();
         mainLoop();
     }
@@ -44,10 +44,6 @@ public class CinderEngine {
     private void mainLoop() {
         while (threadManager.checkThreads()) {
         }
-    }
-
-    private void init() {
-        FileCache.init();
     }
 
     public static void CLOSE() {

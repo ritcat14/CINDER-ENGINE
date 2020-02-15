@@ -1,11 +1,34 @@
 package files;
 
+import cache.FileCache;
+import cache.types.BufferedImageBlock;
+import core.CinderEngine;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.IOException;
 import java.util.Arrays;
 
 public abstract class ImageTools {
+
+    public static BufferedImage getImage(String fileName) {
+        BufferedImageBlock loadedBlock = (BufferedImageBlock)FileCache.getBlock(fileName);
+        BufferedImage loadedImage = null;
+        if (loadedBlock != null) {
+            loadedImage = loadedBlock.getImage();
+            if (loadedImage != null) return loadedImage;
+        } else {
+            try {
+                loadedImage = ImageIO.read(CinderEngine.class.getClassLoader().getResourceAsStream(fileName));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (loadedImage != null) FileCache.addBlock(fileName, new BufferedImageBlock(loadedImage));
+        return loadedImage;
+    }
 
     public static BufferedImage blur(BufferedImage image) {
         int radius = 11;

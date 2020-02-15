@@ -1,6 +1,7 @@
 package files;
 
 import cache.FileCache;
+import cache.types.StringArrayBlock;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,10 +9,15 @@ import java.io.InputStreamReader;
 public abstract class FileReader {
 
     public static String[] readFile(String fileName) {
-        String[] fileData = FileCache.getFile(fileName);
-        if (fileData != null && fileData.length > 0) return fileData;
-        else if (fileData.length <= 0) {
-            // Output error that file is empty
+        StringArrayBlock loadedBlock = (StringArrayBlock)FileCache.getBlock(fileName);
+        String[] fileData = null;
+        if (loadedBlock != null) {
+            fileData = ((StringArrayBlock) FileCache.getBlock(fileName)).getData();
+            if (fileData != null && fileData.length > 0) return fileData;
+            else if (fileData.length <= 0) {
+                System.out.println("Empty file, removing from cache.");
+                loadedBlock.kill();
+            }
         } else {
             BufferedReader reader;
             InputStreamReader inputStreamReader;
@@ -32,7 +38,7 @@ public abstract class FileReader {
                 System.exit(-1);
             }
         }
-        FileCache.addFile(fileName, fileData);
+        FileCache.addBlock(fileName, new StringArrayBlock(fileData));
         return fileData;
     }
 

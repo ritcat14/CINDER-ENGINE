@@ -1,5 +1,7 @@
 package cache;
 
+import cache.types.Block;
+import cache.types.BufferedImageBlock;
 import cache.types.StringArrayBlock;
 
 import java.util.HashMap;
@@ -8,33 +10,33 @@ import java.util.Map;
 
 public abstract class FileCache {
 
-    private static int BLOCK_LIFE = 60;
-    private static Map<String, StringArrayBlock> fileMap;
+    private static Map<String, Block> fileMap;
 
     public static void init() {
+        System.out.println("Initiating cache");
         fileMap = new HashMap<>();
     }
 
     public static void update() {
-        Iterator<Map.Entry<String, StringArrayBlock>> iterator = fileMap.entrySet().iterator();
+        Iterator<Map.Entry<String, Block>> iterator = fileMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, StringArrayBlock> entry = iterator.next();
+            Map.Entry<String, Block> entry = iterator.next();
             entry.getValue().update();
             if (!entry.getValue().isAlive()) iterator.remove();
         }
     }
 
-    public static String[] getFile(String fileName) {
-        Iterator<Map.Entry<String, StringArrayBlock>> iterator = fileMap.entrySet().iterator();
+    public static Block getBlock(String fileName) {
+        Iterator<Map.Entry<String, Block>> iterator = fileMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, StringArrayBlock> entry = iterator.next();
-            if (entry.getKey().equals(fileName)) return entry.getValue().getData();
+            Map.Entry<String, Block> entry = iterator.next();
+            if (entry.getKey().equals(fileName)) return entry.getValue();
         }
         return null;
     }
 
-    public static void addFile(String fileName, String[] fileData) {
-        fileMap.put(fileName, new StringArrayBlock(fileData, BLOCK_LIFE));
+    public static void addBlock(String fileName, Block block) {
+        fileMap.put(fileName, block);
     }
 
 }

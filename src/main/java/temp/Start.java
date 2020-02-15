@@ -4,6 +4,7 @@ import core.events.Event;
 import core.events.types.MouseEventFired;
 import core.graphics.gui.GuiButton;
 import core.states.State;
+import files.ImageTools;
 
 import java.awt.*;
 
@@ -16,7 +17,8 @@ public class Start extends State {
     @Override
     public void init() {
         System.out.println("Initiated state start");
-        objectManager.addResource(new GuiButton(10, 10, 200, 75, Color.CYAN, Color.LIGHT_GRAY) {
+        objectManager.addResource(new GuiButton(10, 10, 200, 75,
+                ImageTools.getImage("images/startButton1.png"), ImageTools.getImage("images/startButton2.png")) {
             @Override
             protected boolean mousePressed(MouseEventFired event) {
                 if (super.mousePressed(event)) {
