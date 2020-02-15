@@ -1,0 +1,4 @@
+1. Nested GUI elements
+	- Components can contain other components
+	- "Parent" component contains 'child' components
+	- Parent passes it's children with it when being treated as a resource and object
