@@ -12,7 +12,7 @@ public class ObjectManager {
 
     private ConcurrentLinkedQueue<Object> sharedObjects = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Resource> sharedResources = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Object> guiComponents = new ConcurrentLinkedQueue<Object>();
+    private ConcurrentLinkedQueue<Object> guiComponents = new ConcurrentLinkedQueue<>();
 
     public synchronized void addResource(Resource resource) {
         sharedResources.add(resource);

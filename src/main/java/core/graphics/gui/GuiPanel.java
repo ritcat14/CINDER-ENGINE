@@ -30,4 +30,12 @@ public class GuiPanel extends GuiComponent {
             graphics.drawImage(image, (int) x, (int) y, (int) width, (int) height, null);
         }
     }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
 }
