@@ -81,4 +81,16 @@ public abstract class GuiComponent extends Object implements EventListener {
         if (!visible) return;
         for (GuiComponent component : initialisedComponents) component.onEvent(event);
     }
+
+    public void toggleVisible() {
+        this.visible = !visible;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 }
