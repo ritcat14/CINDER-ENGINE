@@ -12,6 +12,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     protected double x, y, width, height;
     protected Rectangle bounds;
+    protected boolean visible = true;
 
     private List<GuiComponent> components;
     private List<GuiComponent> initialisedComponents;
@@ -28,6 +29,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void init() {
+        if (!visible) return;
         super.init();
         for (GuiComponent component : components) {
             component.init();
@@ -48,6 +50,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void update() {
+        if (!visible) return;
         for (GuiComponent component : components) {
             if (!component.isInitialised()) component.init();
         }
@@ -58,6 +61,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void remove() {
+        if (!visible) return;
         super.remove();
         for (GuiComponent component : initialisedComponents) {
             component.remove();
@@ -66,6 +70,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void render(Graphics graphics) {
+        if (!visible) return;
         graphics.fillRect((int) x, (int) y, (int) width, (int) height);
         bounds.setBounds((int)x, (int)y, (int)width, (int)height);
         for (GuiComponent component : initialisedComponents) component.render(graphics);
@@ -73,6 +78,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void onEvent(Event event) {
+        if (!visible) return;
         for (GuiComponent component : initialisedComponents) component.onEvent(event);
     }
 }

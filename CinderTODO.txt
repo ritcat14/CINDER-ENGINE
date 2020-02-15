@@ -2,3 +2,6 @@
 	- Components can contain other components
 	- "Parent" component contains 'child' components
 	- Parent passes it's children with it when being treated as a resource and object
+
+
+2. Add visibility field to GuiComponents - DONE
