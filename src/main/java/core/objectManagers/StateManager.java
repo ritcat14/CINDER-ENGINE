@@ -94,6 +94,6 @@ public class StateManager extends ObjectManager implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (currentState != null) currentState.onEvent(event);
+        if (currentState != null) currentState.getObjectManager().onEvent(event);
     }
 }

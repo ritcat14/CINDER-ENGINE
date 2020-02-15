@@ -32,10 +32,4 @@ public class Game extends State {
         graphics.fillRect(0, 0, (int) Window.getWindowWidth(), (int) Window.getWindowHeight());
         super.render(graphics);
     }
-
-    @Override
-    public void onEvent(Event event) {
-        //TODO: Dispatch events to appropriate objects
-        System.out.println("Event fired in game");
-    }
 }

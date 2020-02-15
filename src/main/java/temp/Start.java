@@ -1,11 +1,13 @@
 package temp;
 
 import core.events.Event;
+import core.events.types.MouseEventFired;
+import core.graphics.gui.GuiButton;
 import core.states.State;
 
-public class Start extends State {
+import java.awt.*;
 
-    private int time = 0;
+public class Start extends State {
 
     public Start() {
         super("start");
@@ -14,18 +16,15 @@ public class Start extends State {
     @Override
     public void init() {
         System.out.println("Initiated state start");
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        time++;
-        if (time % 120 == 0) requestChange("game");
-    }
-
-    @Override
-    public void onEvent(Event event) {
-        //TODO: Dispatch events to appropriate objects
-        System.out.println("Event fired in start");
+        objectManager.addResource(new GuiButton(10, 10, 200, 75, Color.CYAN, Color.LIGHT_GRAY) {
+            @Override
+            protected boolean mousePressed(MouseEventFired event) {
+                if (super.mousePressed(event)) {
+                    requestChange("game");
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }

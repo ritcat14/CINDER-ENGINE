@@ -4,13 +4,12 @@ package core.states;
  *  Class that represents a game state
  */
 
-import core.events.EventListener;
 import core.objectManagers.ObjectManager;
 import core.objects.Object;
 
 import java.awt.*;
 
-public abstract class State extends Object implements EventListener {
+public abstract class State extends Object {
 
     private volatile boolean requestedChange = false;
     private volatile String requestedState = "";
@@ -44,6 +43,10 @@ public abstract class State extends Object implements EventListener {
     public synchronized void changed() {
         requestedChange = false;
         requestedState = "";
+    }
+
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 
     public synchronized boolean hasRequestedChange() {

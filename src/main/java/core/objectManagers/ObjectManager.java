@@ -1,5 +1,8 @@
 package core.objectManagers;
 
+import core.events.Event;
+import core.events.EventHandler;
+import core.events.EventListener;
 import core.graphics.gui.GuiComponent;
 import core.loading.Resource;
 import core.objects.Object;
@@ -8,7 +11,7 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ObjectManager {
+public class ObjectManager implements EventListener {
 
     private ConcurrentLinkedQueue<Object> sharedObjects = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Resource> sharedResources = new ConcurrentLinkedQueue<>();
@@ -71,6 +74,20 @@ public class ObjectManager {
 
     public ConcurrentLinkedQueue<Resource> getSharedResources() {
         return sharedResources;
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        for (Object sharedObject : sharedObjects) {
+            if (sharedObject instanceof EventListener) {
+                ((EventListener)sharedObject).onEvent(event);
+            }
+        }
+        for (Object guiComponent : guiComponents) {
+            if (guiComponent instanceof EventListener) {
+                ((EventListener)guiComponent).onEvent(event);
+            }
+        }
     }
 
     public void cleanUp() {
