@@ -1,5 +1,6 @@
 package temp;
 
+import core.events.Event;
 import core.graphics.Window;
 import core.graphics.gui.GuiPanel;
 import core.states.State;
@@ -30,5 +31,11 @@ public class Game extends State {
         graphics.setColor(Color.CYAN);
         graphics.fillRect(0, 0, (int) Window.getWindowWidth(), (int) Window.getWindowHeight());
         super.render(graphics);
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        //TODO: Dispatch events to appropriate objects
+        System.out.println("Event fired in game");
     }
 }

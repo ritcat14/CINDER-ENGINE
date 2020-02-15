@@ -1,12 +1,14 @@
 package core.objectManagers;
 
+import core.events.Event;
+import core.events.EventListener;
 import core.objects.Object;
 import core.states.State;
 import core.threads.ThreadManager;
 
 import java.awt.*;
 
-public class StateManager extends ObjectManager {
+public class StateManager extends ObjectManager implements EventListener {
 
     private ObjectManager objectManager;
 
@@ -88,5 +90,10 @@ public class StateManager extends ObjectManager {
 
     public ObjectManager getObjectManager() {
         return objectManager;
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        if (currentState != null) currentState.onEvent(event);
     }
 }

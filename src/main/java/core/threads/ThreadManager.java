@@ -26,7 +26,7 @@ public class ThreadManager extends Object {
 
     @Override
     public void init() {
-        window = new Window(width, height);
+        window = new Window(width, height, stateManager);
     }
 
     public synchronized void update() {

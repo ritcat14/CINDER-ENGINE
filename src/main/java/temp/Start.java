@@ -1,5 +1,6 @@
 package temp;
 
+import core.events.Event;
 import core.states.State;
 
 public class Start extends State {
@@ -20,5 +21,11 @@ public class Start extends State {
         super.update();
         time++;
         if (time % 120 == 0) requestChange("game");
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        //TODO: Dispatch events to appropriate objects
+        System.out.println("Event fired in start");
     }
 }

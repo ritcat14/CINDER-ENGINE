@@ -4,6 +4,9 @@ package core.graphics;
  *  Main window class
  */
 
+import core.events.EventListener;
+import core.events.Keyboard;
+import core.events.Mouse;
 import core.objectManagers.StateManager;
 import files.ImageTools;
 
@@ -27,7 +30,7 @@ public class Window extends Canvas implements WindowListener {
     private volatile boolean isBlurred = false;
     private volatile boolean requestedBlur = false;
 
-    public Window(double width, double height) {
+    public Window(double width, double height, EventListener eventListener) {
         Window.width = width;
         Window.height = height;
         currentFrame = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_RGB);
@@ -45,6 +48,11 @@ public class Window extends Canvas implements WindowListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.requestFocus();
+
+        addKeyListener(new Keyboard(eventListener));
+        Mouse mouse = new Mouse(eventListener);
+        addMouseListener(mouse);
+        addMouseMotionListener(mouse);
     }
 
     public synchronized void update() {
