@@ -101,4 +101,10 @@ public class StateManager extends ObjectManager implements EventListener {
     public void onEvent(Event event) {
         if (currentState != null) currentState.getObjectManager().onEvent(event);
     }
+
+    @Override
+    public void cleanUp() {
+        currentState.cleanUp();
+        super.cleanUp();
+    }
 }

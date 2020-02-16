@@ -1,6 +1,7 @@
 package core;
 
 import cache.FileCache;
+import core.graphics.Window;
 import core.objectManagers.StateManager;
 import core.states.State;
 import core.threads.Loader;
@@ -42,8 +43,7 @@ public class CinderEngine {
     }
 
     private void mainLoop() {
-        while (threadManager.checkThreads()) {
-        }
+        while (threadManager.checkThreads()) {}
     }
 
     public static void CLOSE() {

@@ -33,16 +33,15 @@ public class ThreadManager extends Object {
         if (window == null) return;
         window.update();
         stateManager.update();
+        checkClosing();
     }
 
     @Override
-    public void render(Graphics graphics) {
-    }
+    public void render(Graphics graphics) {}
 
     public synchronized void render() {
         if (window == null) return;
         window.render(stateManager);
-        checkClosing();
     }
 
     public synchronized void addResource(Resource resource) {
@@ -72,14 +71,15 @@ public class ThreadManager extends Object {
 
     public boolean checkThreads() {
         for (Loop loop : loops) if (!loop.isClosed()) return true;
-        System.out.println("Closing Game.");
-        System.exit(0);
+        System.out.println("Threads closed.");
+        Window.CLOSE();
         return false;
     }
 
     private synchronized void checkClosing() {
         if (CinderEngine.CLOSED || window.shouldClose()) {
             CinderEngine.CLOSE();
+            stateManager.cleanUp();
             for (Loop loop : loops) loop.stopRunning();
         }
     }
