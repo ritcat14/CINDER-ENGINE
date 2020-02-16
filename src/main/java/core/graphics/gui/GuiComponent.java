@@ -2,7 +2,6 @@ package core.graphics.gui;
 
 import core.events.Event;
 import core.events.EventListener;
-import core.loading.Resource;
 import core.objects.Object;
 
 import java.awt.*;

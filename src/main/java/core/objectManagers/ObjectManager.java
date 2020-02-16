@@ -86,14 +86,14 @@ public class ObjectManager implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        for (Object sharedObject : sharedObjects) {
-            if (sharedObject instanceof EventListener) {
-                ((EventListener)sharedObject).onEvent(event);
-            }
-        }
         for (Object guiComponent : guiComponents) {
             if (guiComponent instanceof EventListener) {
                 ((EventListener)guiComponent).onEvent(event);
+            }
+        }
+        for (Object sharedObject : sharedObjects) {
+            if (sharedObject instanceof EventListener) {
+                ((EventListener)sharedObject).onEvent(event);
             }
         }
     }
