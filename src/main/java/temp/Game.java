@@ -16,6 +16,7 @@ public class Game extends State {
 
     @Override
     public void init() {
+        super.init();
         System.out.println("Initiating game state");
         objectManager.addResource(new GuiPanel(0, 0, 200, Window.getWindowHeight(), Color.GRAY));
         for (int i = 0; i < 10; i++) objectManager.addResource(new TestObject(i));

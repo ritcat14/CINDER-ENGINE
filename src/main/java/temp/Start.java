@@ -14,6 +14,7 @@ public class Start extends State {
 
     @Override
     public void init() {
+        super.init();
         System.out.println("Initiated state start");
         objectManager.addResource(new GuiButton(10, 10, 200, 75,
                 ImageTools.getImage("images/startButton1.png"), ImageTools.getImage("images/startButton2.png")) {
