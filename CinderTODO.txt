@@ -5,3 +5,5 @@
 
 
 2. Add visibility field to GuiComponents - DONE
+
+3. Fix concurrency issue on embedded gui components - ArrayList/List is not thread safe! - DONE

@@ -2,11 +2,12 @@ package core.graphics.gui;
 
 import core.events.Event;
 import core.events.EventListener;
+import core.loading.Resource;
 import core.objects.Object;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class GuiComponent extends Object implements EventListener {
 
@@ -14,8 +15,8 @@ public abstract class GuiComponent extends Object implements EventListener {
     protected Rectangle bounds;
     protected boolean visible = true;
 
-    private List<GuiComponent> components;
-    private List<GuiComponent> initialisedComponents;
+    private ConcurrentLinkedQueue<GuiComponent> components;
+    private ConcurrentLinkedQueue<GuiComponent> initialisedComponents;
 
     public GuiComponent(double x, double y, double width, double height) {
         this.x = x;
@@ -23,17 +24,17 @@ public abstract class GuiComponent extends Object implements EventListener {
         this.width = width;
         this.height = height;
         this.bounds = new Rectangle((int)x, (int)y, (int)width, (int)height);
-        components = new ArrayList<>();
-        initialisedComponents = new ArrayList<>();
+        components = new ConcurrentLinkedQueue<>();
+        initialisedComponents = new ConcurrentLinkedQueue<>();
     }
 
     @Override
     public void init() {
         if (!visible) return;
         super.init();
-        for (GuiComponent component : components) {
-            component.init();
-        }
+
+        Iterator<GuiComponent> it = components.iterator();
+        while (it.hasNext()) it.next().init();
     }
 
     public void addComponent(GuiComponent component) {
@@ -51,35 +52,52 @@ public abstract class GuiComponent extends Object implements EventListener {
     @Override
     public void update() {
         if (!visible) return;
-        for (GuiComponent component : components) {
-            if (!component.isInitialised()) component.init();
+        Iterator<GuiComponent> it = components.iterator();
+        while (it.hasNext()) {
+            GuiComponent component = it.next();
+            if (!component.isInitialised()) continue;
+            initialisedComponents.add(component);
+            it.remove();
         }
-        initialisedComponents.addAll(components);
-        components.clear();
-        for (GuiComponent component : initialisedComponents) component.update();
+
+        it = initialisedComponents.iterator();
+        while (it.hasNext()) it.next().update();
     }
 
     @Override
     public void remove() {
         if (!visible) return;
+
         super.remove();
-        for (GuiComponent component : initialisedComponents) {
-            component.remove();
-        }
+
+        Iterator<GuiComponent> it = initialisedComponents.iterator();
+        while (it.hasNext()) it.next().remove();
+
+        it = components.iterator();
+        while (it.hasNext()) it.next().remove();
+
+        initialisedComponents.clear();
+        components.clear();
     }
 
     @Override
     public void render(Graphics graphics) {
         if (!visible) return;
+
         graphics.fillRect((int) x, (int) y, (int) width, (int) height);
+
         bounds.setBounds((int)x, (int)y, (int)width, (int)height);
-        for (GuiComponent component : initialisedComponents) component.render(graphics);
+
+        Iterator<GuiComponent> it = initialisedComponents.iterator();
+        while (it.hasNext()) it.next().render(graphics);
     }
 
     @Override
     public void onEvent(Event event) {
         if (!visible) return;
-        for (GuiComponent component : initialisedComponents) component.onEvent(event);
+
+        Iterator<GuiComponent> it = initialisedComponents.iterator();
+        while (it.hasNext()) it.next().onEvent(event);
     }
 
     public void toggleVisible() {
