@@ -13,6 +13,16 @@ import java.util.Arrays;
 
 public abstract class ImageTools {
 
+    public static BufferedImage[] loadSprites(String fileName, int amount) {
+        BufferedImage[] images = new BufferedImage[amount];
+
+        for (int i = 0; i < amount; i++) {
+            images[i] = getImage(fileName + i + ".png");
+        }
+
+        return images;
+    }
+
     public static BufferedImage getImage(String fileName) {
         BufferedImageBlock loadedBlock = (BufferedImageBlock)FileCache.getBlock(fileName);
         BufferedImage loadedImage = null;

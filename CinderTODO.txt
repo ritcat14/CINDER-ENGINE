@@ -8,4 +8,4 @@
 
 3. Fix concurrency issue on embedded gui components - ArrayList/List is not thread safe! - DONE
 
-4. Add getSprites(fileName, amount) to ImageTools
+4. Add getSprites(fileName, amount) to ImageTools - DONE
