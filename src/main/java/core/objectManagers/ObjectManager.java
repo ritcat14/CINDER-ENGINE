@@ -25,34 +25,24 @@ public class ObjectManager implements EventListener {
         sharedResources.addAll(resources);
     }
 
-    protected synchronized void addObject(Object object) {
-        sharedObjects.add(object);
-    }
-
-    protected synchronized void addObjects(List<Object> objectList) {
-        sharedObjects.addAll(objectList);
-    }
-
-    private void updateResources() {
+    private synchronized void updateResources() {
         Iterator<Resource> it = sharedResources.iterator();
         while (it.hasNext()) {
             Resource resource = it.next();
-            if (resource instanceof Object) {
-                if (resource.isInitialised()) {
-                    if (resource instanceof GuiComponent) guiComponents.add((GuiComponent) resource);
-                    else addObject((Object) resource);
-                    it.remove();
-                }
+            if (resource instanceof Object && resource.isInitialised()) {
+                if (resource instanceof GuiComponent) guiComponents.add((GuiComponent) resource);
+                else sharedObjects.add((Object) resource);
+                it.remove();
             }
         }
     }
 
-    private void renderObjects(Graphics graphics) {
+    private synchronized void renderObjects(Graphics graphics) {
         for (Object sharedObject : sharedObjects) sharedObject.render(graphics);
         for (Object guiComponent : guiComponents) guiComponent.render(graphics);
     }
 
-    private void checkList(ConcurrentLinkedQueue<Object> list) {
+    private synchronized void checkList(ConcurrentLinkedQueue<Object> list) {
         Iterator it = list.iterator();
         while (it.hasNext()) {
             Object object = (Object) it.next();
@@ -60,7 +50,7 @@ public class ObjectManager implements EventListener {
         }
     }
 
-    private void updateObjects() {
+    private synchronized void updateObjects() {
         updateResources();
         checkList(guiComponents);
         checkList(sharedObjects);
@@ -85,20 +75,20 @@ public class ObjectManager implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event) {
+    public synchronized void onEvent(Event event) {
         for (Object guiComponent : guiComponents) {
             if (guiComponent instanceof EventListener) {
-                ((EventListener)guiComponent).onEvent(event);
+                ((EventListener) guiComponent).onEvent(event);
             }
         }
         for (Object sharedObject : sharedObjects) {
             if (sharedObject instanceof EventListener) {
-                ((EventListener)sharedObject).onEvent(event);
+                ((EventListener) sharedObject).onEvent(event);
             }
         }
     }
 
-    public void cleanUp() {
+    public synchronized void cleanUp() {
         sharedObjects.clear();
         sharedResources.clear();
         guiComponents.clear();

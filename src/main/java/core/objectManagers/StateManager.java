@@ -50,7 +50,7 @@ public class StateManager extends ObjectManager implements EventListener {
     }
 
     public synchronized void addState(State state) {
-        super.addObject(state);
+        super.getSharedObjects().add(state);
     }
 
     @Override
@@ -86,11 +86,6 @@ public class StateManager extends ObjectManager implements EventListener {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
         currentState.render(graphics);
-    }
-
-    @Override
-    @Deprecated
-    public synchronized void addObject(Object object) {
     }
 
     public ObjectManager getObjectManager() {
