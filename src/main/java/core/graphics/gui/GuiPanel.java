@@ -18,6 +18,10 @@ public class GuiPanel extends GuiComponent {
         this.image = image;
     }
 
+    public GuiPanel(double x, double y, BufferedImage image) {
+        this(x, y, image.getWidth(), image.getHeight(), image);
+    }
+
     @Override
     public void render(Graphics graphics) {
         graphics.setColor(color);

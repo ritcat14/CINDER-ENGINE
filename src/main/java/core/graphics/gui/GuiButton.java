@@ -23,6 +23,16 @@ public class GuiButton extends GuiPanel {
         this.foregroundColour = foregroundColour;
     }
 
+    public GuiButton(double x, double y, BufferedImage background) {
+        super(x, y, background);
+    }
+
+    public GuiButton(double x, double y, BufferedImage background, BufferedImage foreground) {
+        super(x, y, background);
+        this.background = background;
+        this.foreground = foreground;
+    }
+
     public GuiButton(double x, double y, double width, double height, BufferedImage background) {
         super(x, y, width, height, background);
         this.background = background;
