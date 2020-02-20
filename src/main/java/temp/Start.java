@@ -1,5 +1,7 @@
 package temp;
 
+import core.events.Event;
+import core.events.EventDispatcher;
 import core.events.types.MouseEventFired;
 import core.graphics.Window;
 import core.graphics.gui.GuiButton;
@@ -25,7 +27,7 @@ public class Start extends State {
     public void init() {
 
         objectManager.addResource(testScene = new Scene(0, 0, "scenes/testScene.txt"));
-
+        testScene.start();
         super.init();
     }
 
@@ -61,10 +63,25 @@ public class Start extends State {
         objectManager.addResource(settingMenu = new SettingMenu());
     }
 
+    private boolean mousePressed(MouseEventFired eventFired) {
+        if (eventFired.getButton() == 1 && !testScene.isPaused()) {
+            testScene.pause();
+        } else if (eventFired.getButton() == 2 && testScene.isPaused()) {
+            testScene.start();
+        }
+        return false;
+    }
+
+    @Override
+    protected void eventFired(Event event) {
+        EventDispatcher dispatcher = new EventDispatcher(event);
+        dispatcher.dispatch(Event.Type.MOUSE_PRESSED, (Event e) -> mousePressed((MouseEventFired) e));
+    }
+
     @Override
     public void update() {
         super.update();
-        
+
         if (testScene.isFinished() && !testScene.isRemoved()) {
             testScene.remove();
             initPanels();

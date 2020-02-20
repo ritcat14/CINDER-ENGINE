@@ -4,12 +4,14 @@ package core.states;
  *  Class that represents a game state
  */
 
+import core.events.Event;
+import core.events.EventListener;
 import core.objectManagers.ObjectManager;
 import core.objects.Object;
 
 import java.awt.*;
 
-public abstract class State extends Object {
+public abstract class State extends Object implements EventListener {
 
     private volatile boolean requestedChange = false;
     private volatile String requestedState = "";
@@ -20,6 +22,8 @@ public abstract class State extends Object {
     public State(String stateName) {
         this.stateName = stateName;
     }
+
+    protected abstract void eventFired(Event event);
 
     public void setObjectManager(ObjectManager objectManager) {
         this.objectManager = objectManager;
@@ -65,4 +69,9 @@ public abstract class State extends Object {
         if (objectManager != null) objectManager.cleanUp();
     }
 
+    @Override
+    public void onEvent(Event event) {
+        eventFired(event);
+        objectManager.onEvent(event);
+    }
 }

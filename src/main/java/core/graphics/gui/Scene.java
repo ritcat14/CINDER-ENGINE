@@ -1,10 +1,8 @@
 package core.graphics.gui;
 
-import java.awt.Graphics;
-import java.awt.Color;
-
 import files.FileReader;
-import files.ImageTools;
+
+import java.awt.*;
 
 public class Scene extends GuiPanel {
 
@@ -15,36 +13,52 @@ public class Scene extends GuiPanel {
     private String filePath;
 
     private boolean finished = false;
+    private boolean running = false;
+    private boolean paused = false;
 
     public Scene(double x, double y, String filePath) {
         super(x, y, 1, 1, Color.GRAY);
         this.filePath = filePath;
     }
 
+    public void start() {
+        if (paused) {
+            paused = false;
+            currentFrame.setBlurred(false);
+        }
+        running = true;
+    }
+
+    public void pause() {
+        paused = true;
+        if (currentFrame != null) currentFrame.setBlurred(true);
+    }
+
+    public void stop() {
+        running = false;
+        finished = true;
+    }
+
     @Override
     public void init() {
         String[] frameData = FileReader.readFile(filePath);
-        frameNum = frameData.length - 1;
+        frameNum = frameData.length;
 
         frames = new Frame[frameNum];
 
-        for (int i = 1; i < frameNum + 1; i++) frames[i - 1] = new Frame(frameData[i], ImageTools.getImage(frameData[i].split("|")[1]));
+        for (int i = 0; i < frameNum; i++) {
+            frames[i] = new Frame(frameData[i]);
+            frames[i].init();
+        }
 
         currentFrame = frames[0];
         currentFrame.redraw();
         super.init();
     }
 
-    /**
-     * @return finished
-     */
-    public boolean isFinished() {
-        return finished;
-    }
-
     @Override
     public void update() {
-        if (!finished) {
+        if (running && !paused) {
             super.update();
             currentFrame.update();
             if (!currentFrame.isAlive()) {
@@ -60,10 +74,17 @@ public class Scene extends GuiPanel {
 
     @Override
     public void render(Graphics graphics) {
-        if (!finished) {
+        if (running) {
             super.render(graphics);
             currentFrame.render(graphics);
         }
     }
-    
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
 }

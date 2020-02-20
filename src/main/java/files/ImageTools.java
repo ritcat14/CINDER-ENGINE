@@ -10,8 +10,17 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 public abstract class ImageTools {
+
+    private static final int radius = 11;
+    private static final int size = radius * 2 + 1;
+    private static final float weight = 1.0f / (size * size);
+    private static final float[] data = new float[size * size];
+
+    private static Kernel kernel;
+    private static ConvolveOp convolveOp;
 
     public static BufferedImage[] loadSprites(String fileName, int amount) {
         BufferedImage[] images = new BufferedImage[amount];
@@ -31,7 +40,10 @@ public abstract class ImageTools {
             if (loadedImage != null) return loadedImage;
         } else {
             try {
-                loadedImage = ImageIO.read(CinderEngine.class.getClassLoader().getResourceAsStream(fileName));
+                loadedImage = ImageIO.read(Objects.requireNonNull(CinderEngine.class.getClassLoader().getResourceAsStream(fileName)));
+            } catch (NullPointerException e) {
+                System.out.println("Failed to find file: " + fileName);
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,17 +53,10 @@ public abstract class ImageTools {
     }
 
     public static BufferedImage blur(BufferedImage image) {
-        int radius = 11;
-        int size = radius * 2 + 1;
-        float weight = 1.0f / (size * size);
-        float[] data = new float[size * size];
-
         Arrays.fill(data, weight);
-
-        Kernel kernel = new Kernel(size, size, data);
-        ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null);
-        //tbi is BufferedImage
-        return op.filter(image, null);
+        kernel = new Kernel(size, size, data);
+        convolveOp = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null);
+        return convolveOp.filter(image, null);
     }
 
 }

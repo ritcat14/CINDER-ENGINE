@@ -1,5 +1,6 @@
 package temp;
 
+import core.events.Event;
 import core.graphics.Window;
 import core.states.State;
 
@@ -18,6 +19,11 @@ public class Game extends State {
         //objectManager.addResource(new GuiPanel(0, 0, 200, Window.getWindowHeight(), Color.GRAY));
         for (int i = 0; i < 4; i++) objectManager.addResource(new TestObject(i));
         super.init();
+    }
+
+    @Override
+    protected void eventFired(Event event) {
+
     }
 
     @Override

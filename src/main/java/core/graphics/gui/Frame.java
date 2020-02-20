@@ -1,20 +1,38 @@
 package core.graphics.gui;
 
-import java.awt.image.BufferedImage;
-import java.awt.Graphics;
+import core.graphics.Window;
+import core.objects.Object;
+import files.ImageTools;
 
-public class Frame {
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+public class Frame extends Object {
+
+    private final int life;
+
+    private final String fileName;
 
     private BufferedImage image;
-    private final int life;
+    private BufferedImage blurredImage;
+
     private int currentLife;
     private int time = 0;
-    private boolean alive = true;
 
-    public Frame(String data, BufferedImage image) {
-        String[] parts = data.split("|");
+    private boolean alive = true;
+    private boolean blurred = false;
+
+    public Frame(String data) {
+        String[] parts = data.split(":");
         this.life = Integer.parseInt(parts[0]);
-        this.image = image;
+        this.fileName = parts[1];
+    }
+
+    @Override
+    public void init() {
+        image = ImageTools.getImage(fileName);
+        blurredImage = ImageTools.blur(image);
+        super.init();
     }
 
     public void redraw() {
@@ -22,6 +40,7 @@ public class Frame {
         currentLife = life;
     }
 
+    @Override
     public void update() {
         alive = currentLife > 0;
         if (alive) {
@@ -31,15 +50,22 @@ public class Frame {
         }
     }
 
+    @Override
     public void render(Graphics graphics) {
         if (alive) {
-            graphics.drawImage(image, 0, 0, null);
+            if (!blurred) graphics.drawImage(image, 0, 0,
+                    (int) Window.getWindowWidth(), (int) Window.getWindowHeight(), null);
+            else graphics.drawImage(blurredImage, 0, 0,
+                    (int) Window.getWindowWidth(), (int) Window.getWindowHeight(), null);
         }
+    }
+
+    public void setBlurred(boolean blurred) {
+        this.blurred = blurred;
     }
 
     public boolean isAlive() {
         return alive;
     }
-
 
 }
