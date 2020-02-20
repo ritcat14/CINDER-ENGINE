@@ -6,11 +6,18 @@ import java.awt.*;
 
 public class Scene extends GuiPanel {
 
+    private final String filePath;
+
+    private int MAX_LOAD = 40;
+
     private Frame[] frames;
+    private String[] frameData;
     private Frame currentFrame;
     private int frame = 0;
+    private int loadedPointer = -1;
     private int frameNum;
-    private String filePath;
+
+    private String imageDir;
 
     private boolean finished = false;
     private boolean running = false;
@@ -21,39 +28,47 @@ public class Scene extends GuiPanel {
         this.filePath = filePath;
     }
 
-    public void start() {
-        if (paused) {
-            paused = false;
-            currentFrame.setBlurred(false);
+    @Override
+    public void init() {
+        frameData = FileReader.readFile(filePath);
+        imageDir = frameData[0];
+
+        frameNum = Integer.parseInt(frameData[1].split(":")[0]);
+
+        frames = new Frame[frameNum];
+
+        for (int i = 0; i < frameNum; i++) {
+            frames[i] = new Frame(Double.parseDouble(frameData[1].split(":")[1]), imageDir + i + ".png");
         }
+
+        loadNext();
+
+        currentFrame = frames[0];
+        currentFrame.redraw();
+        super.init();
+    }
+
+    private void loadNext() {
+        if (loadedPointer == frameNum - 1) return;
+
+        if (loadedPointer + MAX_LOAD >= frameNum) MAX_LOAD = frameNum - loadedPointer - 1;
+        System.out.println("Loading next: " + MAX_LOAD);
+        for (int i = 1; i < MAX_LOAD + 1; i++) frames[loadedPointer + i].init();
+        loadedPointer += MAX_LOAD;
+    }
+
+    public void start() {
+        if (paused) paused = false;
         running = true;
     }
 
     public void pause() {
         paused = true;
-        if (currentFrame != null) currentFrame.setBlurred(true);
     }
 
     public void stop() {
         running = false;
         finished = true;
-    }
-
-    @Override
-    public void init() {
-        String[] frameData = FileReader.readFile(filePath);
-        frameNum = frameData.length;
-
-        frames = new Frame[frameNum];
-
-        for (int i = 0; i < frameNum; i++) {
-            frames[i] = new Frame(frameData[i]);
-            frames[i].init();
-        }
-
-        currentFrame = frames[0];
-        currentFrame.redraw();
-        super.init();
     }
 
     @Override
@@ -65,10 +80,13 @@ public class Scene extends GuiPanel {
                 frame++;
                 if (frame >= frameNum) finished = true;
                 else {
+                    currentFrame.remove();
+                    frames[frame - 1] = null;
                     currentFrame = frames[frame];
                     currentFrame.redraw();
                 }
             }
+            if (frame == (loadedPointer - (MAX_LOAD / 2))) loadNext();
         }
     }
 

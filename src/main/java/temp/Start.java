@@ -20,12 +20,10 @@ public class Start extends State {
 
     public Start() {
         super("start");
-
     }
 
     @Override
     public void init() {
-
         objectManager.addResource(testScene = new Scene(0, 0, "scenes/testScene.txt"));
         testScene.start();
         super.init();
