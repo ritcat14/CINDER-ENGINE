@@ -1,10 +1,10 @@
 package temp;
 
-import core.events.Event;
 import core.events.types.MouseEventFired;
 import core.graphics.Window;
 import core.graphics.gui.GuiButton;
 import core.graphics.gui.GuiPanel;
+import core.graphics.gui.Scene;
 import core.states.State;
 import files.ImageTools;
 
@@ -14,6 +14,8 @@ public class Start extends State {
 
     private SettingMenu settingMenu;
 
+    private Scene testScene;
+
     public Start() {
         super("start");
 
@@ -22,7 +24,12 @@ public class Start extends State {
     @Override
     public void init() {
 
+        objectManager.addResource(testScene = new Scene(0, 0, "scenes/testScene.txt"));
+
         super.init();
+    }
+
+    private void initPanels() {
         objectManager.addResource(new GuiPanel(50, 50, Window.getWindowWidth() - 100, Window.getWindowHeight() - 100,
                 Color.CYAN));
         objectManager.addResource(new GuiButton(70, 70, 200, 75,
@@ -53,4 +60,15 @@ public class Start extends State {
 
         objectManager.addResource(settingMenu = new SettingMenu());
     }
+
+    @Override
+    public void update() {
+        super.update();
+        
+        if (testScene.isFinished() && !testScene.isRemoved()) {
+            testScene.remove();
+            initPanels();
+        }
+    }
+
 }
