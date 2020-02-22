@@ -1,27 +1,33 @@
 package core.graphics.gui;
 
+import core.graphics.Window;
 import files.FileReader;
+import files.ImageTools;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Scene extends GuiPanel {
 
+    private volatile LinkedList<BufferedImage> images = new LinkedList();
+    private volatile BufferedImage currentFrame;
+
     private final String filePath;
 
-    private int MAX_LOAD = 40;
-
-    private Frame[] frames;
     private String[] frameData;
-    private Frame currentFrame;
-    private int frame = 0;
-    private int loadedPointer = -1;
-    private int frameNum;
+    private double[] lifes;
 
-    private String imageDir;
+    private int frame = 0;
+    private int frameNum;
+    private int time = 0;
 
     private boolean finished = false;
     private boolean running = false;
     private boolean paused = false;
+
 
     public Scene(double x, double y, String filePath) {
         super(x, y, 1, 1, Color.GRAY);
@@ -31,35 +37,24 @@ public class Scene extends GuiPanel {
     @Override
     public void init() {
         frameData = FileReader.readFile(filePath);
-        imageDir = frameData[0];
+        String imageDir = frameData[0];
 
         frameNum = Integer.parseInt(frameData[1].split(":")[0]);
 
-        frames = new Frame[frameNum];
+        BufferedImage[] frames = ImageTools.loadSprites(imageDir, frameNum);
 
-        for (int i = 0; i < frameNum; i++) {
-            frames[i] = new Frame(Double.parseDouble(frameData[1].split(":")[1]), imageDir + i + ".png");
-        }
+        lifes = new double[frameNum];
+        for (int i = 0; i < frameNum; i++) lifes[i] = Double.parseDouble(frameData[1].split(":")[1]);
 
-        loadNext();
-
-        currentFrame = frames[0];
-        currentFrame.redraw();
+        // Deposit sprites[] into new list
+        images = new LinkedList(Arrays.asList(frames));
         super.init();
     }
 
-    private void loadNext() {
-        if (loadedPointer == frameNum - 1) return;
-
-        if (loadedPointer + MAX_LOAD >= frameNum) MAX_LOAD = frameNum - loadedPointer - 1;
-        System.out.println("Loading next: " + MAX_LOAD);
-        for (int i = 1; i < MAX_LOAD + 1; i++) frames[loadedPointer + i].init();
-        loadedPointer += MAX_LOAD;
-    }
-
-    public void start() {
+    public void play() {
         if (paused) paused = false;
         running = true;
+        finished = false;
     }
 
     public void pause() {
@@ -67,6 +62,7 @@ public class Scene extends GuiPanel {
     }
 
     public void stop() {
+        paused = true;
         running = false;
         finished = true;
     }
@@ -75,18 +71,24 @@ public class Scene extends GuiPanel {
     public void update() {
         if (running && !paused) {
             super.update();
-            currentFrame.update();
-            if (!currentFrame.isAlive()) {
-                frame++;
-                if (frame >= frameNum) finished = true;
-                else {
-                    currentFrame.remove();
-                    frames[frame - 1] = null;
-                    currentFrame = frames[frame];
-                    currentFrame.redraw();
+            time++;
+            if (time % (120 * lifes[frame]) == 0) {
+                Iterator<BufferedImage> iterator = images.iterator();
+                while (iterator.hasNext()) {
+                    BufferedImage nextImage = iterator.next();
+                    if (nextImage == currentFrame) {
+                        iterator.remove();
+                    } else {
+                        currentFrame = nextImage;
+                        frame++;
+                        if (frame >= frameNum) {
+                            finished = true;
+                            return;
+                        }
+                        break;
+                    }
                 }
             }
-            if (frame == (loadedPointer - (MAX_LOAD / 2))) loadNext();
         }
     }
 
@@ -94,7 +96,9 @@ public class Scene extends GuiPanel {
     public void render(Graphics graphics) {
         if (running) {
             super.render(graphics);
-            currentFrame.render(graphics);
+            // Render image
+            graphics.drawImage(currentFrame, 0, 0,
+                    (int) core.graphics.Window.getWindowWidth(), (int) Window.getWindowHeight(), null);
         }
     }
 

@@ -25,7 +25,7 @@ public class Start extends State {
     @Override
     public void init() {
         objectManager.addResource(testScene = new Scene(0, 0, "scenes/testScene.txt"));
-        testScene.start();
+        testScene.play();
         super.init();
     }
 
@@ -62,10 +62,11 @@ public class Start extends State {
     }
 
     private boolean mousePressed(MouseEventFired eventFired) {
+        System.out.println("Mouse pressed: " + eventFired.getButton());
         if (eventFired.getButton() == 1 && !testScene.isPaused()) {
             testScene.pause();
-        } else if (eventFired.getButton() == 2 && testScene.isPaused()) {
-            testScene.start();
+        } else if (eventFired.getButton() == 3 && testScene.isPaused()) {
+            testScene.play();
         }
         return false;
     }
