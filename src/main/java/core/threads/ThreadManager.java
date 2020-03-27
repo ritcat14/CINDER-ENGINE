@@ -1,12 +1,12 @@
 package core.threads;
 
 import core.CinderEngine;
+import core.graphics.PixelRenderer;
 import core.graphics.Window;
 import core.loading.Resource;
 import core.objectManagers.StateManager;
 import core.objects.Object;
 
-import java.awt.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ThreadManager extends Object {
@@ -37,7 +37,8 @@ public class ThreadManager extends Object {
     }
 
     @Override
-    public void render(Graphics graphics) {}
+    public void render(PixelRenderer pixelRenderer) {
+    }
 
     public synchronized void render() {
         if (window == null) return;

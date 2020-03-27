@@ -6,10 +6,9 @@ package core.states;
 
 import core.events.Event;
 import core.events.EventListener;
+import core.graphics.PixelRenderer;
 import core.objectManagers.ObjectManager;
 import core.objects.Object;
-
-import java.awt.*;
 
 public abstract class State extends Object implements EventListener {
 
@@ -35,8 +34,8 @@ public abstract class State extends Object implements EventListener {
     }
 
     @Override
-    public void render(Graphics graphics) {
-        if (objectManager != null) objectManager.render(graphics);
+    public void render(PixelRenderer pixelRenderer) {
+        if (objectManager != null) objectManager.render(pixelRenderer);
     }
 
     public void requestChange(String stateName) {

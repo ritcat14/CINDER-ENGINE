@@ -1,5 +1,7 @@
 package core.graphics.gui;
 
+import core.graphics.PixelRenderer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -23,12 +25,12 @@ public class GuiPanel extends GuiComponent {
     }
 
     @Override
-    public void render(Graphics graphics) {
-        graphics.setColor(color);
-        super.render(graphics);
+    public void render(PixelRenderer pixelRenderer) {
+        pixelRenderer.fillRectangle(x, y, width, height, color);
         if (image != null) {
-            graphics.drawImage(image, (int) x, (int) y, (int) width, (int) height, null);
+            pixelRenderer.renderImage(image, x, y);
         }
+        super.render(pixelRenderer);
     }
 
     public void setColor(Color color) {

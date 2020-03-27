@@ -2,11 +2,10 @@ package core.objectManagers;
 
 import core.events.Event;
 import core.events.EventListener;
+import core.graphics.PixelRenderer;
 import core.objects.Object;
 import core.states.State;
 import core.threads.ThreadManager;
-
-import java.awt.*;
 
 public class StateManager extends ObjectManager implements EventListener {
 
@@ -82,10 +81,10 @@ public class StateManager extends ObjectManager implements EventListener {
     }
 
     @Override
-    public void render(Graphics graphics) {
+    public void render(PixelRenderer pixelRenderer) {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
-        currentState.render(graphics);
+        currentState.render(pixelRenderer);
     }
 
     @Override

@@ -2,6 +2,7 @@ package core.graphics.gui;
 
 import core.events.Event;
 import core.events.EventListener;
+import core.graphics.PixelRenderer;
 import core.objects.Object;
 
 import java.awt.*;
@@ -80,15 +81,10 @@ public abstract class GuiComponent extends Object implements EventListener {
     }
 
     @Override
-    public void render(Graphics graphics) {
+    public void render(PixelRenderer pixelRenderer) {
         if (!visible) return;
-
-        graphics.fillRect((int) x, (int) y, (int) width, (int) height);
-
-        bounds.setBounds((int)x, (int)y, (int)width, (int)height);
-
-        Iterator<GuiComponent> it = initialisedComponents.iterator();
-        while (it.hasNext()) it.next().render(graphics);
+        bounds.setBounds((int) x, (int) y, (int) width, (int) height);
+        for (GuiComponent initialisedComponent : initialisedComponents) initialisedComponent.render(pixelRenderer);
     }
 
     @Override

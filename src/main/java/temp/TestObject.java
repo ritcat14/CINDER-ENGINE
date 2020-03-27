@@ -1,5 +1,6 @@
 package temp;
 
+import core.graphics.PixelRenderer;
 import core.graphics.Window;
 import core.objects.Entity;
 import files.ImageTools;
@@ -51,9 +52,8 @@ public class TestObject extends Entity {
     }
 
     @Override
-    public void render(Graphics graphics) {
-        graphics.setColor(Color.BLUE);
-        super.render(graphics);
-        graphics.drawImage(image, (int) x, (int) y, (int) width, (int) height, null);
+    public void render(PixelRenderer pixelRenderer) {
+        pixelRenderer.fillRectangle(x, y, width, height, Color.BLUE);
+        pixelRenderer.renderImage(image, x, y);
     }
 }

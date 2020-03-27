@@ -8,16 +8,14 @@ public abstract class Entity extends Object {
     protected volatile double width, height;
     protected volatile int dir;
 
+    private volatile Rectangle bounds;
+
     public Entity(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-    }
-
-    @Override
-    public synchronized void render(Graphics graphics) {
-        graphics.fillRect((int) x, (int) y, (int) width, (int) height);
+        bounds = new Rectangle((int) x, (int) y, (int) width, (int) height);
     }
 
     public void remove() {
@@ -58,5 +56,10 @@ public abstract class Entity extends Object {
 
     public synchronized void setHeight(double height) {
         this.height = height;
+    }
+
+    public Rectangle getBounds() {
+        bounds.setBounds((int) x, (int) y, (int) width, (int) height);
+        return bounds;
     }
 }

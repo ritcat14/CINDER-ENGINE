@@ -1,6 +1,7 @@
 package temp;
 
 import core.events.Event;
+import core.graphics.PixelRenderer;
 import core.graphics.Window;
 import core.states.State;
 
@@ -32,9 +33,8 @@ public class Game extends State {
     }
 
     @Override
-    public void render(Graphics graphics) {
-        graphics.setColor(Color.CYAN);
-        graphics.fillRect(0, 0, (int) Window.getWindowWidth(), (int) Window.getWindowHeight());
-        super.render(graphics);
+    public void render(PixelRenderer pixelRenderer) {
+        pixelRenderer.fillRectangle(0, 0, Window.getWindowWidth(), Window.getWindowHeight(), Color.CYAN);
+        super.render(pixelRenderer);
     }
 }

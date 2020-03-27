@@ -1,6 +1,6 @@
 package core.graphics.gui;
 
-import core.graphics.Window;
+import core.graphics.PixelRenderer;
 import files.FileReader;
 import files.ImageTools;
 
@@ -93,12 +93,10 @@ public class Scene extends GuiPanel {
     }
 
     @Override
-    public void render(Graphics graphics) {
+    public void render(PixelRenderer pixelRenderer) {
         if (running) {
-            super.render(graphics);
-            // Render image
-            graphics.drawImage(currentFrame, 0, 0,
-                    (int) core.graphics.Window.getWindowWidth(), (int) Window.getWindowHeight(), null);
+            super.render(pixelRenderer);
+            pixelRenderer.renderImage(currentFrame, 0, 0);
         }
     }
 

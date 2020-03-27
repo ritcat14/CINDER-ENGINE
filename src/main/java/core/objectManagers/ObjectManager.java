@@ -2,11 +2,11 @@ package core.objectManagers;
 
 import core.events.Event;
 import core.events.EventListener;
+import core.graphics.PixelRenderer;
 import core.graphics.gui.GuiComponent;
 import core.loading.Resource;
 import core.objects.Object;
 
-import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -37,9 +37,9 @@ public class ObjectManager implements EventListener {
         }
     }
 
-    private synchronized void renderObjects(Graphics graphics) {
-        for (Object sharedObject : sharedObjects) sharedObject.render(graphics);
-        for (Object guiComponent : guiComponents) guiComponent.render(graphics);
+    private synchronized void renderObjects(PixelRenderer pixelRenderer) {
+        for (Object sharedObject : sharedObjects) sharedObject.render(pixelRenderer);
+        for (Object guiComponent : guiComponents) guiComponent.render(pixelRenderer);
     }
 
     private synchronized void checkList(ConcurrentLinkedQueue<Object> list) {
@@ -52,9 +52,11 @@ public class ObjectManager implements EventListener {
 
     private synchronized void updateObjects() {
         updateResources();
-        checkList(guiComponents);
+
         checkList(sharedObjects);
         for (Object sharedObject : sharedObjects) sharedObject.update();
+
+        checkList(guiComponents);
         for (Object guiComponent : guiComponents) guiComponent.update();
     }
 
@@ -62,8 +64,8 @@ public class ObjectManager implements EventListener {
         updateObjects();
     }
 
-    public synchronized void render(Graphics graphics) {
-        renderObjects(graphics);
+    public synchronized void render(PixelRenderer pixelRenderer) {
+        renderObjects(pixelRenderer);
     }
 
     public ConcurrentLinkedQueue<Object> getSharedObjects() {

@@ -27,6 +27,7 @@ public class Window extends Canvas implements WindowListener {
     private volatile JFrame frame;
     private volatile BufferedImage currentFrame;
     private volatile BufferedImage blurredFrame;
+    private volatile PixelRenderer pixelRenderer;
     private volatile boolean isBlurred = false;
     private volatile boolean requestedBlur = false;
 
@@ -34,6 +35,7 @@ public class Window extends Canvas implements WindowListener {
         Window.width = width;
         Window.height = height;
         currentFrame = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_RGB);
+        pixelRenderer = new PixelRenderer(currentFrame);
         setPreferredSize(new Dimension((int) width, (int) height));
         requestFocus();
 
@@ -69,7 +71,8 @@ public class Window extends Canvas implements WindowListener {
         graphics2D = (Graphics2D) currentFrame.getGraphics();
         graphics2D.setColor(Color.GRAY);
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        stateManager.render(graphics2D);
+        pixelRenderer.setGraphics2D(graphics2D);
+        stateManager.render(pixelRenderer);
         bs.getDrawGraphics().drawImage(currentFrame, 0, 0, getWidth(), getHeight(), null);
         graphics2D.dispose();
         bs.show();

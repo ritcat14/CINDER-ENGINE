@@ -1,8 +1,7 @@
 package core.objects;
 
+import core.graphics.PixelRenderer;
 import core.loading.Resource;
-
-import java.awt.*;
 
 public abstract class Object extends Resource {
 
@@ -10,7 +9,7 @@ public abstract class Object extends Resource {
 
     public abstract void update();
 
-    public abstract void render(Graphics graphics);
+    public abstract void render(PixelRenderer pixelRenderer);
 
     public void remove() {
         removed = true;

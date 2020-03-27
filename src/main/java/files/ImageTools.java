@@ -59,4 +59,22 @@ public abstract class ImageTools {
         return convolveOp.filter(image, null);
     }
 
+    public static BufferedImage[] splitImage(String image, int rows, int cols, int chunkWidth, int chunkHeight) {
+        return splitImage(getImage(image), rows, cols, chunkWidth, chunkHeight);
+    }
+
+    public static BufferedImage[] splitImage(BufferedImage image, int rows, int cols, int chunkWidth, int chunkHeight) {
+        int chunks = rows * cols;
+        int count = 0;
+
+        BufferedImage[] imgs = new BufferedImage[chunks];
+
+        for (int y = 0; y < cols; y++) {
+            for (int x = 0; x < rows; x++) {
+                imgs[count++] = image.getSubimage(x * chunkWidth, y * chunkHeight, chunkWidth, chunkHeight);
+            }
+        }
+        return imgs;
+    }
+
 }
