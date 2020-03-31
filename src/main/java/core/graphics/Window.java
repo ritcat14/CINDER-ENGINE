@@ -8,6 +8,8 @@ import core.events.EventListener;
 import core.events.Keyboard;
 import core.events.Mouse;
 import core.objectManagers.StateManager;
+import core.sout.LogType;
+import core.sout.Logger;
 import files.ImageTools;
 
 import javax.swing.*;
@@ -16,6 +18,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.*;
 
 public class Window extends Canvas implements WindowListener {
 
@@ -30,6 +36,9 @@ public class Window extends Canvas implements WindowListener {
     private volatile PixelRenderer pixelRenderer;
     private volatile boolean isBlurred = false;
     private volatile boolean requestedBlur = false;
+
+    private static volatile List<String> fontsToRegister = new ArrayList<>();
+    public static Map<String, Font> registeredFonts = new HashMap<>();
 
     public Window(double width, double height, EventListener eventListener) {
         Window.width = width;
@@ -57,8 +66,27 @@ public class Window extends Canvas implements WindowListener {
         addMouseMotionListener(mouse);
     }
 
+    public static synchronized void registerFont(String name) throws URISyntaxException {
+        fontsToRegister.add(name);
+    }
+
     public synchronized void update() {
-        //if (graphics2D != null) update(graphics2D);
+        String name = "";
+        try {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            Iterator it = fontsToRegister.iterator();
+            while (it.hasNext()) {
+                name = (String) it.next();
+                File file = new File(Objects.requireNonNull(ClassLoader.getSystemClassLoader()
+                        .getResource("fonts/" + name + ".ttf")).toURI());
+                Font font = Font.createFont(Font.TRUETYPE_FONT, file);
+                ge.registerFont(font);
+                registeredFonts.put(name, font);
+                it.remove();
+            }
+        } catch (Exception e) {
+            Logger.PRINT_ERROR(e, "Failed to register font" + name);
+        }
     }
 
     public synchronized void render(StateManager stateManager) {
@@ -123,7 +151,7 @@ public class Window extends Canvas implements WindowListener {
     public void windowDeactivated(WindowEvent windowEvent) {}
 
     public static void CLOSE() {
-        System.out.println("Closing Game.");
+        Logger.PRINT(LogType.INFO, "Closing Game.");
         System.exit(0);
     }
 

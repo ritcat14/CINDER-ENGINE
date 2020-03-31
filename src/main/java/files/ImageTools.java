@@ -4,6 +4,8 @@ import cache.FileCache;
 import cache.types.BufferedImageBlock;
 import core.CinderEngine;
 import core.objects.Rectangle;
+import core.sout.LogType;
+import core.sout.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -45,7 +47,7 @@ public abstract class ImageTools {
             try {
                 loadedImage = ImageIO.read(Objects.requireNonNull(CinderEngine.class.getClassLoader().getResourceAsStream(fileName)));
             } catch (NullPointerException e) {
-                System.out.println("Failed to find file: " + fileName);
+                Logger.PRINT(LogType.FILE, "Failed to find file: " + fileName);
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();

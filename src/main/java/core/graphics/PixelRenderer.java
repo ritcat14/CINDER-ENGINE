@@ -36,20 +36,34 @@ public class PixelRenderer {
         drawRectangle(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight(), color);
     }
 
-    public void renderImage(BufferedImage image, double xpos, double ypos, double width, double height) {
+    public void drawImage(BufferedImage image, double xpos, double ypos, double width, double height) {
         graphics2D.drawImage(image, (int) xpos, (int) ypos, (int) width, (int) height, null);
     }
 
-    public void renderImage(BufferedImage image, Rectangle rectangle) {
+    public void drawImage(BufferedImage image, Rectangle rectangle) {
         graphics2D.drawImage(image, (int) rectangle.getX(), (int) rectangle.getY(), (int) rectangle.getWidth(), (int) rectangle.getHeight(), null);
     }
 
-    public void renderImage(BufferedImage image, double xpos, double ypos) {
+    public void drawImage(BufferedImage image, double xpos, double ypos) {
         graphics2D.drawImage(image, (int) xpos, (int) ypos, null);
     }
 
-    public void renderImage(BufferedImage image, Point point) {
+    public void drawImage(BufferedImage image, Point point) {
         graphics2D.drawImage(image, (int) point.getX(), (int) point.getY(), null);
+    }
+
+    public void drawString(Point point, String text, Color color) {
+        Color pre = graphics2D.getColor();
+        graphics2D.setColor(color);
+        graphics2D.drawString(text, (int) point.getX(), (int) point.getY());
+        graphics2D.setColor(pre);
+    }
+
+    public void drawString(Point point, String text, Color color, Font font) {
+        Font pre = graphics2D.getFont();
+        graphics2D.setFont(font);
+        drawString(point, text, color);
+        graphics2D.setFont(pre);
     }
 
     public void setGraphics2D(Graphics2D graphics2D) {

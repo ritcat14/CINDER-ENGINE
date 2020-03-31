@@ -1,3 +1,0 @@
-2
-images/scene/testScene/
-7:0.1

@@ -6,6 +6,8 @@ import core.graphics.Window;
 import core.loading.Resource;
 import core.objectManagers.StateManager;
 import core.objects.Object;
+import core.sout.LogType;
+import core.sout.Logger;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -72,7 +74,7 @@ public class ThreadManager extends Object {
 
     public boolean checkThreads() {
         for (Loop loop : loops) if (!loop.isClosed()) return true;
-        System.out.println("Threads closed.");
+        Logger.PRINT(LogType.THREAD, "Threads closed.");
         Window.CLOSE();
         return false;
     }

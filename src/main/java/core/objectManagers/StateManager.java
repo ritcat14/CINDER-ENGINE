@@ -4,6 +4,8 @@ import core.events.Event;
 import core.events.EventListener;
 import core.graphics.PixelRenderer;
 import core.objects.Object;
+import core.sout.LogType;
+import core.sout.Logger;
 import core.states.State;
 import core.threads.ThreadManager;
 
@@ -43,7 +45,7 @@ public class StateManager extends ObjectManager implements EventListener {
     }
 
     private void changeState(State state) {
-        System.out.println("Setting state to: " + state.getStateName());
+        Logger.PRINT(LogType.INFO, "Setting state to: " + state.getStateName());
         currentState = state;
         currentState.setObjectManager(objectManager);
     }

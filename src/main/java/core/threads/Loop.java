@@ -1,5 +1,8 @@
 package core.threads;
 
+import core.sout.LogType;
+import core.sout.Logger;
+
 public abstract class Loop implements Runnable, LoopInterface {
 
     private final double SECOND = 1000000000;
@@ -32,7 +35,7 @@ public abstract class Loop implements Runnable, LoopInterface {
     }
 
     public synchronized void stop() {
-        System.out.println("Closing thread " + thread.getName());
+        Logger.PRINT(LogType.THREAD, "Closing thread " + thread.getName());
         closed = true;
         if (locked) {
             lock.unlock();

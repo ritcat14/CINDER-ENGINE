@@ -73,6 +73,11 @@ public class Scene extends GuiPanel {
         finished = true;
     }
 
+    public void setFrame(int frame) {
+        this.frame = frame;
+        currentFrame = images.get(frame);
+    }
+
     @Override
     public void update() {
         if (!visible || isRemoved()) return;
@@ -104,7 +109,7 @@ public class Scene extends GuiPanel {
         if (!visible || isRemoved()) return;
         if (running) {
             super.render(pixelRenderer);
-            pixelRenderer.renderImage(currentFrame, 0, 0);
+            pixelRenderer.drawImage(currentFrame, 0, 0);
         }
     }
 

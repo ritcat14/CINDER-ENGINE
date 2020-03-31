@@ -3,6 +3,8 @@ package files;
 import cache.FileCache;
 import cache.types.StringArrayBlock;
 import core.CinderEngine;
+import core.sout.LogType;
+import core.sout.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,7 +19,7 @@ public abstract class FileReader {
             fileData = ((StringArrayBlock) FileCache.getBlock(fileName)).getData();
             if (fileData != null && fileData.length > 0) return fileData;
             else if (fileData.length <= 0) {
-                System.out.println("Empty file, removing from cache.");
+                Logger.PRINT(LogType.FILE, "Empty file, removing from cache.");
                 loadedBlock.kill();
             }
         } else {

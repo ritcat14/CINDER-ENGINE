@@ -1,8 +1,8 @@
 package cache;
 
 import cache.types.Block;
-import cache.types.BufferedImageBlock;
-import cache.types.StringArrayBlock;
+import core.sout.LogType;
+import core.sout.Logger;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ public abstract class FileCache {
     private static Map<String, Block> fileMap;
 
     public static void init() {
-        System.out.println("Initiating cache");
+        Logger.PRINT(LogType.INFO, "Initiating cache");
         fileMap = new HashMap<>();
     }
 

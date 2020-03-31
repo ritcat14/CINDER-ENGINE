@@ -30,9 +30,9 @@ public class GuiPanel extends GuiComponent {
     public void render(PixelRenderer pixelRenderer) {
         if (!visible || isRemoved()) return;
         if (color != null)
-            pixelRenderer.fillRectangle(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), color);
+            pixelRenderer.fillRectangle(bounds, color);
         if (image != null) {
-            pixelRenderer.renderImage(image, bounds.getX(), bounds.getY());
+            pixelRenderer.drawImage(image, bounds);
         }
         super.render(pixelRenderer);
     }

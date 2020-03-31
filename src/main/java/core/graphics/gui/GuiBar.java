@@ -47,7 +47,7 @@ public class GuiBar extends GuiPanel {
         if (foreWidth < 0) foreWidth = 1;
         pixelRenderer.fillRectangle(bounds.getX(), bounds.getY(), foreWidth, bounds.getHeight(), foregroundColour);
 
-        if (foregroundImage != null) pixelRenderer.renderImage(foregroundImage, bounds.getX(), bounds.getY(),
+        if (foregroundImage != null) pixelRenderer.drawImage(foregroundImage, bounds.getX(), bounds.getY(),
                 foreWidth, bounds.getHeight());
     }
 
