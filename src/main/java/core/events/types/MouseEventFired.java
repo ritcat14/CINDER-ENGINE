@@ -1,8 +1,8 @@
 package core.events.types;
 
 import core.events.Event;
+import core.objects.Point;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class MouseEventFired extends Event {
@@ -13,7 +13,7 @@ public class MouseEventFired extends Event {
     public MouseEventFired(Type type, MouseEvent event) {
         super(type);
         this.button = event.getButton();
-        this.position = event.getLocationOnScreen();
+        this.position = new Point(event.getLocationOnScreen().x, event.getLocationOnScreen().y);
     }
 
     public int getButton() {

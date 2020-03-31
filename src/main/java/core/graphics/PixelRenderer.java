@@ -1,5 +1,8 @@
 package core.graphics;
 
+import core.objects.Point;
+import core.objects.Rectangle;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -19,7 +22,7 @@ public class PixelRenderer {
     }
 
     public void fillRectangle(Rectangle rectangle, Color color) {
-        fillRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, color);
+        fillRectangle(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight(), color);
     }
 
     public void drawRectangle(double x, double y, double w, double h, Color color) {
@@ -30,15 +33,23 @@ public class PixelRenderer {
     }
 
     public void drawRectangle(Rectangle rectangle, Color color) {
-        drawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, color);
+        drawRectangle(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight(), color);
     }
 
     public void renderImage(BufferedImage image, double xpos, double ypos, double width, double height) {
         graphics2D.drawImage(image, (int) xpos, (int) ypos, (int) width, (int) height, null);
     }
 
+    public void renderImage(BufferedImage image, Rectangle rectangle) {
+        graphics2D.drawImage(image, (int) rectangle.getX(), (int) rectangle.getY(), (int) rectangle.getWidth(), (int) rectangle.getHeight(), null);
+    }
+
     public void renderImage(BufferedImage image, double xpos, double ypos) {
         graphics2D.drawImage(image, (int) xpos, (int) ypos, null);
+    }
+
+    public void renderImage(BufferedImage image, Point point) {
+        graphics2D.drawImage(image, (int) point.getX(), (int) point.getY(), null);
     }
 
     public void setGraphics2D(Graphics2D graphics2D) {

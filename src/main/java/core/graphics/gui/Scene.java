@@ -1,6 +1,8 @@
 package core.graphics.gui;
 
 import core.graphics.PixelRenderer;
+import core.objects.Point;
+import core.objects.Rectangle;
 import files.FileReader;
 import files.ImageTools;
 
@@ -29,13 +31,14 @@ public class Scene extends GuiPanel {
     private boolean paused = false;
 
 
-    public Scene(double x, double y, String filePath) {
-        super(x, y, 1, 1, Color.GRAY);
+    public Scene(Point point, String filePath) {
+        super(new Rectangle(point.getX(), point.getY(), 1, 1), Color.GRAY);
         this.filePath = filePath;
     }
 
     @Override
     public void init() {
+        if (!visible || isRemoved()) return;
         frameData = FileReader.readFile(filePath);
         String imageDir = frameData[0];
 
@@ -52,16 +55,19 @@ public class Scene extends GuiPanel {
     }
 
     public void play() {
+        if (!visible || isRemoved()) return;
         if (paused) paused = false;
         running = true;
         finished = false;
     }
 
     public void pause() {
+        if (!visible || isRemoved()) return;
         paused = true;
     }
 
     public void stop() {
+        if (!visible || isRemoved()) return;
         paused = true;
         running = false;
         finished = true;
@@ -69,6 +75,7 @@ public class Scene extends GuiPanel {
 
     @Override
     public void update() {
+        if (!visible || isRemoved()) return;
         if (running && !paused) {
             super.update();
             time++;
@@ -94,6 +101,7 @@ public class Scene extends GuiPanel {
 
     @Override
     public void render(PixelRenderer pixelRenderer) {
+        if (!visible || isRemoved()) return;
         if (running) {
             super.render(pixelRenderer);
             pixelRenderer.renderImage(currentFrame, 0, 0);

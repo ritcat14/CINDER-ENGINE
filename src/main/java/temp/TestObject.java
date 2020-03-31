@@ -3,6 +3,7 @@ package temp;
 import core.graphics.PixelRenderer;
 import core.graphics.Window;
 import core.objects.Entity;
+import core.objects.Rectangle;
 import files.ImageTools;
 
 import java.awt.*;
@@ -17,7 +18,7 @@ public class TestObject extends Entity {
     private BufferedImage image;
 
     public TestObject(int id) {
-        super(100, 100, 50, 50);
+        super(new Rectangle(100, 100, 50, 50));
         this.id = id;
         dir = new Random().nextInt(4);
     }
@@ -34,26 +35,26 @@ public class TestObject extends Entity {
     public void update() {
         switch (dir) {
             case 0:
-                setY(getY() - 1);
+                bounds.setY(bounds.getY() - 1);
                 break;
             case 1:
-                setX(getX() + 1);
+                bounds.setX(bounds.getX() + 1);
                 break;
             case 2:
-                setY(getY() + 1);
+                bounds.setY(bounds.getY() + 1);
                 break;
             case 3:
-                setX(getX() - 1);
+                bounds.setX(bounds.getX() - 1);
                 break;
         }
-        if (getX() < 0 || getY() < 0 ||
-                getX() > Window.getWindowWidth() - getWidth() || getY() > Window.getWindowHeight() - getHeight())
+        if (bounds.getX() < 0 || bounds.getY() < 0 ||
+                bounds.getX() > Window.getWindowWidth() - bounds.getWidth() || bounds.getY() > Window.getWindowHeight() - bounds.getHeight())
             remove();
     }
 
     @Override
     public void render(PixelRenderer pixelRenderer) {
-        pixelRenderer.fillRectangle(x, y, width, height, Color.BLUE);
-        pixelRenderer.renderImage(image, x, y);
+        pixelRenderer.fillRectangle(bounds, Color.BLUE);
+        pixelRenderer.renderImage(image, bounds);
     }
 }

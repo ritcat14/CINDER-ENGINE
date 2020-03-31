@@ -4,33 +4,29 @@ import core.events.Event;
 import core.events.EventListener;
 import core.graphics.PixelRenderer;
 import core.objects.Object;
+import core.objects.Point;
+import core.objects.Rectangle;
 
-import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class GuiComponent extends Object implements EventListener {
 
-    protected double x, y, width, height;
     protected Rectangle bounds;
     protected boolean visible = true;
 
     private ConcurrentLinkedQueue<GuiComponent> components;
     private ConcurrentLinkedQueue<GuiComponent> initialisedComponents;
 
-    public GuiComponent(double x, double y, double width, double height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.bounds = new Rectangle((int)x, (int)y, (int)width, (int)height);
+    public GuiComponent(Rectangle rectangle) {
+        this.bounds = rectangle;
         components = new ConcurrentLinkedQueue<>();
         initialisedComponents = new ConcurrentLinkedQueue<>();
     }
 
     @Override
     public void init() {
-        if (!visible) return;
+        if (!visible || isRemoved()) return;
         super.init();
 
         Iterator<GuiComponent> it = components.iterator();
@@ -51,7 +47,7 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void update() {
-        if (!visible) return;
+        if (!visible || isRemoved()) return;
         Iterator<GuiComponent> it = components.iterator();
         while (it.hasNext()) {
             GuiComponent component = it.next();
@@ -82,14 +78,13 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     @Override
     public void render(PixelRenderer pixelRenderer) {
-        if (!visible) return;
-        bounds.setBounds((int) x, (int) y, (int) width, (int) height);
+        if (!visible || isRemoved()) return;
         for (GuiComponent initialisedComponent : initialisedComponents) initialisedComponent.render(pixelRenderer);
     }
 
     @Override
     public void onEvent(Event event) {
-        if (!visible) return;
+        if (!visible || isRemoved()) return;
 
         Iterator<GuiComponent> it = initialisedComponents.iterator();
         while (it.hasNext()) it.next().onEvent(event);
@@ -105,5 +100,9 @@ public abstract class GuiComponent extends Object implements EventListener {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
     }
 }

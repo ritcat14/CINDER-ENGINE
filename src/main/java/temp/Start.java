@@ -7,6 +7,8 @@ import core.graphics.Window;
 import core.graphics.gui.GuiButton;
 import core.graphics.gui.GuiPanel;
 import core.graphics.gui.Scene;
+import core.objects.Point;
+import core.objects.Rectangle;
 import core.states.State;
 import files.ImageTools;
 
@@ -24,15 +26,15 @@ public class Start extends State {
 
     @Override
     public void init() {
-        objectManager.addResource(testScene = new Scene(0, 0, "scenes/testScene.txt"));
+        objectManager.addResource(testScene = new Scene(new Point(), "scenes/testScene.txt"));
         testScene.play();
         super.init();
     }
 
     private void initPanels() {
-        objectManager.addResource(new GuiPanel(50, 50, Window.getWindowWidth() - 100, Window.getWindowHeight() - 100,
+        objectManager.addResource(new GuiPanel(new Rectangle(50, 50, Window.getWindowWidth() - 100, Window.getWindowHeight() - 100),
                 Color.CYAN));
-        objectManager.addResource(new GuiButton(70, 70, 200, 75,
+        objectManager.addResource(new GuiButton(new Rectangle(70, 70, 200, 75),
                 ImageTools.getImage("images/startButton1.png"),
                 ImageTools.getImage("images/startButton2.png")) {
             @Override
@@ -45,7 +47,7 @@ public class Start extends State {
             }
         });
 
-        objectManager.addResource(new GuiButton(70, 150, 200, 75,
+        objectManager.addResource(new GuiButton(new Rectangle(70, 150, 200, 75),
                 ImageTools.getImage("images/stuffButton1.png"),
                 ImageTools.getImage("images/stuffButton2.png")) {
             @Override

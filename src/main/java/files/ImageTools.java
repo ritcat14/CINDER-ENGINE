@@ -3,13 +3,16 @@ package files;
 import cache.FileCache;
 import cache.types.BufferedImageBlock;
 import core.CinderEngine;
+import core.objects.Rectangle;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class ImageTools {
@@ -75,6 +78,55 @@ public abstract class ImageTools {
             }
         }
         return imgs;
+    }
+
+    public static List<Rectangle> processObjects(BufferedImage objectImage, int colour, int posScale, int sizeScale) {
+        List<Rectangle> rectangles = new ArrayList<>();
+        int[] pixels = new int[objectImage.getWidth() * objectImage.getHeight()];
+        objectImage.getRGB(0, 0, objectImage.getWidth(), objectImage.getHeight(), pixels, 0, objectImage.getWidth());
+
+        for (int y = 0; y < objectImage.getHeight(); y++) {
+            for (int x = 0; x < objectImage.getWidth(); x++) {
+                int pixel = pixels[x + y * objectImage.getWidth()];
+                if (isColour(pixel, colour)) {
+                    // Check if we have already processed this object
+                    boolean processed = false;
+                    for (Rectangle object : rectangles) {
+                        if (processed = object.contains(x * posScale, y * posScale)) break;
+                    }
+                    if (processed) continue;
+                    // If not, process object, scan in cardinal direction for object
+                    int right = scanRight(x, y, objectImage.getWidth(), pixels, colour);
+                    int down = scanDown(x, y, objectImage.getWidth(), objectImage.getHeight(), pixels, colour);
+                    rectangles.add(new Rectangle(x * posScale, y * posScale, right * sizeScale, down * sizeScale));
+                }
+            }
+        }
+        return rectangles;
+    }
+
+    private static int scanRight(int xp, int yp, int width, int[] pixels, int colour) {
+        int ow = 0;
+        for (int i = xp; i < width; i++) {
+            int pixel = pixels[i + yp * width];
+            if (isColour(pixel, colour)) ow++;
+            else break;
+        }
+        return ow;
+    }
+
+    private static int scanDown(int xp, int yp, int width, int height, int[] pixels, int colour) {
+        int oh = 0;
+        for (int i = yp; i < height; i++) {
+            int pixel = pixels[xp + i * width];
+            if (isColour(pixel, colour)) oh++;
+            else break;
+        }
+        return oh;
+    }
+
+    private static boolean isColour(int pixel, int colour) {
+        return pixel == colour;
     }
 
 }
