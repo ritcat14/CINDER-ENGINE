@@ -2,7 +2,6 @@ package files;
 
 import cache.FileCache;
 import cache.types.StringArrayBlock;
-import core.CinderEngine;
 import core.sout.LogType;
 import core.sout.Logger;
 
@@ -29,7 +28,7 @@ public abstract class FileReader {
             String file;
             try {
                 reader = new BufferedReader(inputStreamReader = new InputStreamReader(
-                        Objects.requireNonNull(CinderEngine.class.getClassLoader().getResourceAsStream(fileName))));
+                        Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(fileName))));
                 while ((file = reader.readLine()) != null) {
                     if (counter == 0) fileData = new String[Integer.valueOf(file)];
                     else fileData[counter - 1] = file;
