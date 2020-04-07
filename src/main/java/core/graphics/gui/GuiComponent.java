@@ -2,7 +2,7 @@ package core.graphics.gui;
 
 import core.events.Event;
 import core.events.EventListener;
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.objects.Object;
 import core.objects.Point;
 import core.objects.Rectangle;
@@ -77,9 +77,9 @@ public abstract class GuiComponent extends Object implements EventListener {
     }
 
     @Override
-    public void render(PixelRenderer pixelRenderer) {
+    public void render(Renderer renderer) {
         if (!visible || isRemoved()) return;
-        for (GuiComponent initialisedComponent : initialisedComponents) initialisedComponent.render(pixelRenderer);
+        for (GuiComponent initialisedComponent : initialisedComponents) initialisedComponent.render(renderer);
     }
 
     @Override

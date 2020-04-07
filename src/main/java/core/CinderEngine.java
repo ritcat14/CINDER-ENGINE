@@ -1,8 +1,9 @@
 package core;
 
 import cache.FileCache;
-import core.graphics.Window;
 import core.objectManagers.StateManager;
+import core.sout.LogType;
+import core.sout.Logger;
 import core.states.State;
 import core.threads.Loader;
 import core.threads.Renderer;
@@ -18,7 +19,12 @@ public class CinderEngine {
     private StateManager stateManager;
 
     public CinderEngine(double width, double height) {
-        FileCache.init();
+        try {
+            FileCache.init();
+            Logger.PRINT(LogType.INFO, FileCache.INSTALL_DIR);
+        } catch (Exception e) {
+            Logger.PRINT_ERROR(e, "Failed to init cache", true);
+        }
         WIDTH = width;
         HEIGHT = height;
         ASPECT_RATIO = width / height;

@@ -1,6 +1,6 @@
 package core.graphics.gui;
 
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.objects.Point;
 import core.objects.Rectangle;
 
@@ -39,15 +39,15 @@ public class GuiBar extends GuiPanel {
     }
 
     @Override
-    public void render(PixelRenderer pixelRenderer) {
+    public void render(Renderer renderer) {
         if (!visible || isRemoved()) return;
-        super.render(pixelRenderer);
+        super.render(renderer);
         // calculate width of foreground
         double foreWidth = (value / maxValue) * (bounds.getWidth());
         if (foreWidth < 0) foreWidth = 1;
-        pixelRenderer.fillRectangle(bounds.getX(), bounds.getY(), foreWidth, bounds.getHeight(), foregroundColour);
+        renderer.fillRectangle(bounds.getX(), bounds.getY(), foreWidth, bounds.getHeight(), foregroundColour);
 
-        if (foregroundImage != null) pixelRenderer.drawImage(foregroundImage, bounds.getX(), bounds.getY(),
+        if (foregroundImage != null) renderer.drawImage(foregroundImage, bounds.getX(), bounds.getY(),
                 foreWidth, bounds.getHeight());
     }
 

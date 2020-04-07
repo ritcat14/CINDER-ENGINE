@@ -1,6 +1,6 @@
 package core.graphics.gui;
 
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.objects.Point;
 import core.objects.Rectangle;
 import files.FileReader;
@@ -105,11 +105,11 @@ public class Scene extends GuiPanel {
     }
 
     @Override
-    public void render(PixelRenderer pixelRenderer) {
+    public void render(Renderer renderer) {
         if (!visible || isRemoved()) return;
         if (running) {
-            super.render(pixelRenderer);
-            pixelRenderer.drawImage(currentFrame, 0, 0);
+            super.render(renderer);
+            renderer.drawImage(currentFrame, 0, 0);
         }
     }
 

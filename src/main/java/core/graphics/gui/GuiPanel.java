@@ -1,6 +1,6 @@
 package core.graphics.gui;
 
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.objects.Point;
 import core.objects.Rectangle;
 
@@ -18,7 +18,7 @@ public class GuiPanel extends GuiComponent {
     }
 
     public GuiPanel(Rectangle rectangle, BufferedImage image) {
-        this(rectangle, Color.RED);
+        super(rectangle);
         this.image = image;
     }
 
@@ -27,14 +27,14 @@ public class GuiPanel extends GuiComponent {
     }
 
     @Override
-    public void render(PixelRenderer pixelRenderer) {
+    public void render(Renderer renderer) {
         if (!visible || isRemoved()) return;
         if (color != null)
-            pixelRenderer.fillRectangle(bounds, color);
+            renderer.fillRectangle(bounds, color);
         if (image != null) {
-            pixelRenderer.drawImage(image, bounds);
+            renderer.drawImage(image, bounds);
         }
-        super.render(pixelRenderer);
+        super.render(renderer);
     }
 
     public BufferedImage getImage() {

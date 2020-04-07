@@ -2,7 +2,7 @@ package core.objectManagers;
 
 import core.events.Event;
 import core.events.EventListener;
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.graphics.gui.GuiComponent;
 import core.loading.Resource;
 import core.objects.Object;
@@ -37,9 +37,12 @@ public class ObjectManager implements EventListener {
         }
     }
 
-    private synchronized void renderObjects(PixelRenderer pixelRenderer) {
-        for (Object sharedObject : sharedObjects) sharedObject.render(pixelRenderer);
-        for (Object guiComponent : guiComponents) guiComponent.render(pixelRenderer);
+    private synchronized void renderObjects(Renderer renderer) {
+        for (Object sharedObject : sharedObjects) sharedObject.render(renderer);
+    }
+
+    public synchronized void renderGuiObjects(Renderer renderer) {
+        for (Object guiComponent : guiComponents) guiComponent.render(renderer);
     }
 
     private synchronized void checkList(ConcurrentLinkedQueue<Object> list) {
@@ -64,8 +67,12 @@ public class ObjectManager implements EventListener {
         updateObjects();
     }
 
-    public synchronized void render(PixelRenderer pixelRenderer) {
-        renderObjects(pixelRenderer);
+    public synchronized void render(Renderer renderer) {
+        renderObjects(renderer);
+    }
+
+    public void renderGui(Renderer renderer) {
+        renderGuiObjects(renderer);
     }
 
     public ConcurrentLinkedQueue<Object> getSharedObjects() {

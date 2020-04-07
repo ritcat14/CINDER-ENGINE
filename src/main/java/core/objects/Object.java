@@ -1,6 +1,6 @@
 package core.objects;
 
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.loading.Resource;
 
 public abstract class Object extends Resource {
@@ -9,7 +9,7 @@ public abstract class Object extends Resource {
 
     public abstract void update();
 
-    public abstract void render(PixelRenderer pixelRenderer);
+    public abstract void render(Renderer renderer);
 
     public void remove() {
         removed = true;

@@ -1,7 +1,7 @@
 package core.threads;
 
 import core.CinderEngine;
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.graphics.Window;
 import core.loading.Resource;
 import core.objectManagers.StateManager;
@@ -39,7 +39,7 @@ public class ThreadManager extends Object {
     }
 
     @Override
-    public void render(PixelRenderer pixelRenderer) {
+    public void render(Renderer renderer) {
     }
 
     public synchronized void render() {

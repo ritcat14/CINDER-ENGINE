@@ -46,15 +46,15 @@ public class GuiButton extends GuiPanel {
         this.foreground = foreground;
     }
 
-    protected boolean mousePressed(MouseEventFired event) {
+    public boolean mousePressed(MouseEventFired event) {
         return contains(event.getPosition());
     }
 
-    protected boolean mouseReleased(MouseEventFired event) {
+    public boolean mouseReleased(MouseEventFired event) {
         return contains(event.getPosition());
     }
 
-    protected boolean mouseMoved(MouseEventFired event) {
+    public boolean mouseMoved(MouseEventFired event) {
         if (contains(event.getPosition())) {
             if (foreground != null) setImage(foreground);
             else if (foregroundColour != null) setColor(foregroundColour);

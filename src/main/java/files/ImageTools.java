@@ -30,8 +30,17 @@ public abstract class ImageTools {
     public static BufferedImage[] loadSprites(String fileName, int amount) {
         BufferedImage[] images = new BufferedImage[amount];
 
-        for (int i = 0; i < amount; i++) {
-            images[i] = getImage(fileName + i + ".png");
+        BufferedImage mainImage = getImage(fileName);
+
+        int xNum = (int) (Math.sqrt(amount));
+        int width = mainImage.getWidth() / xNum;
+
+        for (int y = 0; y < xNum; y++) {
+            for (int x = 0; x < xNum; x++) {
+                int px = x * width;
+                int py = y * width;
+                images[x + y * xNum] = mainImage.getSubimage(px, py, width, width);
+            }
         }
 
         return images;
@@ -62,24 +71,6 @@ public abstract class ImageTools {
         kernel = new Kernel(size, size, data);
         convolveOp = new ConvolveOp(kernel, ConvolveOp.EDGE_ZERO_FILL, null);
         return convolveOp.filter(image, null);
-    }
-
-    public static BufferedImage[] splitImage(String image, int rows, int cols, int chunkWidth, int chunkHeight) {
-        return splitImage(getImage(image), rows, cols, chunkWidth, chunkHeight);
-    }
-
-    public static BufferedImage[] splitImage(BufferedImage image, int rows, int cols, int chunkWidth, int chunkHeight) {
-        int chunks = rows * cols;
-        int count = 0;
-
-        BufferedImage[] imgs = new BufferedImage[chunks];
-
-        for (int y = 0; y < cols; y++) {
-            for (int x = 0; x < rows; x++) {
-                imgs[count++] = image.getSubimage(x * chunkWidth, y * chunkHeight, chunkWidth, chunkHeight);
-            }
-        }
-        return imgs;
     }
 
     public static List<Rectangle> processObjects(BufferedImage objectImage, int colour, int posScale, int sizeScale) {

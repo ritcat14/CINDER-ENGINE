@@ -6,8 +6,11 @@ package core.threads;
 
 public class Updater extends Loop {
 
+    private static double MAX_TPS;
+
     public Updater(ThreadManager threadManager, double MAX_TPS) {
         super(threadManager, MAX_TPS, "UPDATER");
+        Updater.MAX_TPS = MAX_TPS;
     }
 
     @Override
@@ -18,5 +21,9 @@ public class Updater extends Loop {
     @Override
     public void onLoop() {
         threadManager.update();
+    }
+
+    public static double getMaxTps() {
+        return MAX_TPS;
     }
 }

@@ -5,8 +5,10 @@ import static core.sout.LogType.FILE;
 
 public abstract class Logger {
 
-    public static void PRINT_ERROR(Exception e, String sout) {
-        System.err.println();
+    public static void PRINT_ERROR(Exception e, String sout, boolean shouldExit) {
+        PRINT(ERROR, sout);
+        e.printStackTrace();
+        if (shouldExit) System.exit(-1);
     }
 
     public static void PRINT(LogType logType, String sout) {

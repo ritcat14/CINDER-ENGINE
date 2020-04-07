@@ -4,17 +4,21 @@ import cache.types.Block;
 import core.sout.LogType;
 import core.sout.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public abstract class FileCache {
 
+    public static String INSTALL_DIR;
+
     private static Map<String, Block> fileMap;
 
     public static void init() {
         Logger.PRINT(LogType.INFO, "Initiating cache");
         fileMap = new HashMap<>();
+        INSTALL_DIR = new File(System.getProperty("java.class.path")).getAbsoluteFile().getParent();
     }
 
     public static void update() {

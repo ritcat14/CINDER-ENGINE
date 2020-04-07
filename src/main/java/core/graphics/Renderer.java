@@ -5,16 +5,12 @@ import core.objects.Rectangle;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 
-public class PixelRenderer {
+public class Renderer {
+
+    private static int SCALE = 1;
 
     private Graphics2D graphics2D;
-    private int[] pixels;
-
-    public PixelRenderer(BufferedImage currentFrame) {
-        this.pixels = ((DataBufferInt) currentFrame.getRaster().getDataBuffer()).getData();
-    }
 
     public void fillRectangle(double xpos, double ypos, double w, double h, Color color) {
         graphics2D.setColor(color);
@@ -69,4 +65,25 @@ public class PixelRenderer {
     public void setGraphics2D(Graphics2D graphics2D) {
         this.graphics2D = graphics2D;
     }
+
+    public static BufferedImage convertImage(BufferedImage image) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        BufferedImage convertedImage = gc.createCompatibleImage(image.getWidth(), image.getHeight(), image.getTransparency());
+        return convertedImage;
+    }
+
+    public static int getSCALE() {
+        return SCALE;
+    }
+
+    public static void setSCALE(int SCALE) {
+        Renderer.SCALE = SCALE;
+    }
+
+    public static void hardwareAcceleration(boolean enable) {
+        System.setProperty("sun.java2d.opengl", enable ? "true" : "false");
+    }
+
 }

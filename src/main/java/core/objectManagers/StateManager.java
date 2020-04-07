@@ -2,7 +2,7 @@ package core.objectManagers;
 
 import core.events.Event;
 import core.events.EventListener;
-import core.graphics.PixelRenderer;
+import core.graphics.Renderer;
 import core.objects.Object;
 import core.sout.LogType;
 import core.sout.Logger;
@@ -83,10 +83,16 @@ public class StateManager extends ObjectManager implements EventListener {
     }
 
     @Override
-    public void render(PixelRenderer pixelRenderer) {
+    public void render(Renderer renderer) {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
-        currentState.render(pixelRenderer);
+        currentState.render(renderer);
+    }
+
+    public void renderGUI(Renderer renderer) {
+        if (currentState == null) return;
+        if (currentState.hasRequestedChange()) return;
+        currentState.renderGui(renderer);
     }
 
     @Override
