@@ -5,7 +5,6 @@ import core.objectManagers.StateManager;
 import core.sout.LogType;
 import core.sout.Logger;
 import core.states.State;
-import core.threads.Loader;
 import core.threads.Renderer;
 import core.threads.ThreadManager;
 import core.threads.Updater;
@@ -30,9 +29,10 @@ public class CinderEngine {
         ASPECT_RATIO = width / height;
         threadManager = new ThreadManager(width, height);
         stateManager = threadManager.getStateManager();
-        threadManager.addLoop(new Loader(threadManager));
         threadManager.addLoop(new Updater(threadManager, 120));
         threadManager.addLoop(new Renderer(threadManager, 60));
+
+        threadManager.init();
     }
 
     public synchronized void addState(State state) {

@@ -3,43 +3,37 @@ package core.objectManagers;
 import core.events.Event;
 import core.events.EventListener;
 import core.graphics.Renderer;
-import core.objects.Object;
 import core.sout.LogType;
 import core.sout.Logger;
 import core.states.State;
-import core.threads.ThreadManager;
 
-public class StateManager extends ObjectManager implements EventListener {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-    private ObjectManager objectManager;
+public class StateManager implements EventListener {
 
     private volatile String currentStateName;
     private volatile State currentState;
 
-    private ThreadManager threadManager;
-
-    public StateManager(ThreadManager threadManager) {
-        this.threadManager = threadManager;
-        objectManager = new ObjectManager();
-    }
+    private final List<State> states = Collections.synchronizedList(new ArrayList<>());
 
     public synchronized void setCurrentState(String stateName) {
         if (currentStateName != null && currentStateName.equals(stateName)) return;
-        for (Object sharedObject : getSharedObjects()) {
-            State state1 = ((State) sharedObject);
-            if (state1.getStateName().equals(stateName)) {
+        for (State state : states) {
+            if (state.getStateName().equals(stateName)) {
                 if (currentState != null) {
                     currentState.cleanUp();
-                    currentState.deinitialise();
                     if (currentState.hasRequestedChange()) {
                         State preState = currentState;
-                        changeState(state1);
+                        changeState(state);
                         preState.changed();
                         return;
                     }
                 }
                 currentStateName = stateName;
-                changeState(state1);
+                changeState(state);
             }
         }
     }
@@ -47,24 +41,29 @@ public class StateManager extends ObjectManager implements EventListener {
     private void changeState(State state) {
         Logger.PRINT(LogType.INFO, "Setting state to: " + state.getStateName());
         currentState = state;
-        currentState.setObjectManager(objectManager);
+        currentState.init();
     }
 
     public synchronized void addState(State state) {
-        super.getSharedObjects().add(state);
+        state.setStateManager(this);
+        states.add(state);
     }
 
-    @Override
+    public synchronized State getState(String stateName) {
+        synchronized (states) {
+            Iterator<State> iterator = states.iterator();
+            while (iterator.hasNext()) {
+                State state = iterator.next();
+                if (state.getStateName().equals(stateName)) return state;
+            }
+        }
+        Logger.PRINT_ERROR(new NullPointerException(), "Failed to find state: " + stateName, true);
+        return null;
+    }
+
     public void update() {
         if (currentState == null) return;
-
-        if (!currentState.isInitialised()) {
-            currentState.init();
-        }
-
-        if (objectManager.getSharedResources().size() > 0) {
-            threadManager.addResource(objectManager.getSharedResources().iterator().next());
-        }/*
+        /*
         if (currentState.isRemoved()) {
             removeState(currentState);
 
@@ -82,7 +81,6 @@ public class StateManager extends ObjectManager implements EventListener {
         currentState.update();
     }
 
-    @Override
     public void render(Renderer renderer) {
         if (currentState == null) return;
         if (currentState.hasRequestedChange()) return;
@@ -100,9 +98,8 @@ public class StateManager extends ObjectManager implements EventListener {
         if (currentState != null) currentState.onEvent(event);
     }
 
-    @Override
     public void cleanUp() {
         currentState.cleanUp();
-        super.cleanUp();
+        //TODO: Clear lists
     }
 }

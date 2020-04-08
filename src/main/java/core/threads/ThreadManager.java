@@ -1,32 +1,29 @@
 package core.threads;
 
 import core.CinderEngine;
-import core.graphics.Renderer;
 import core.graphics.Window;
-import core.loading.Resource;
 import core.objectManagers.StateManager;
-import core.objects.Object;
 import core.sout.LogType;
 import core.sout.Logger;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class ThreadManager extends Object {
+public class ThreadManager {
 
     private final double width, height;
 
-    private ConcurrentLinkedQueue<Loop> loops = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<Resource> resources = new ConcurrentLinkedQueue<>();
+    private final List<Loop> loops = Collections.synchronizedList(new ArrayList<>());
     private Window window;
     private StateManager stateManager;
 
     public ThreadManager(double width, double height) {
         this.width = width;
         this.height = height;
-        stateManager = new StateManager(this);
+        stateManager = new StateManager();
     }
 
-    @Override
     public void init() {
         window = new Window(width, height, stateManager);
     }
@@ -38,22 +35,9 @@ public class ThreadManager extends Object {
         checkClosing();
     }
 
-    @Override
-    public void render(Renderer renderer) {
-    }
-
     public synchronized void render() {
         if (window == null) return;
         window.render(stateManager);
-    }
-
-    public synchronized void addResource(Resource resource) {
-        resources.add(resource);
-    }
-
-    public synchronized void updateResources() {
-        ((Loader) getLoop("loader")).addResources(resources);
-        resources.clear();
     }
 
     public synchronized StateManager getStateManager() {
@@ -66,14 +50,19 @@ public class ThreadManager extends Object {
 
     public synchronized Loop getLoop(String name) {
         name = name.toUpperCase();
-        for (Loop loop : loops) {
-            if (loop.getName().equals(name)) return loop;
+
+        synchronized (loops) {
+            for (Loop loop : loops) {
+                if (name.equals(loop.getName())) return loop;
+            }
         }
         throw new NullPointerException("Cannot find loop " + name);
     }
 
     public boolean checkThreads() {
-        for (Loop loop : loops) if (!loop.isClosed()) return true;
+        synchronized (loops) {
+            for (Loop loop : loops) if (!loop.isClosed()) return true;
+        }
         Logger.PRINT(LogType.THREAD, "Threads closed.");
         Window.CLOSE();
         return false;
@@ -83,12 +72,17 @@ public class ThreadManager extends Object {
         if (CinderEngine.CLOSED || window.shouldClose()) {
             CinderEngine.CLOSE();
             stateManager.cleanUp();
-            for (Loop loop : loops) loop.stopRunning();
+
+            synchronized (loops) {
+                for (Loop loop : loops) loop.stopRunning();
+            }
         }
     }
 
     public synchronized void addLoop(Loop loop) {
-        loops.add(loop);
+        synchronized (loops) {
+            loops.add(loop);
+        }
     }
 
     public synchronized void stopLoopRunning(String name) {

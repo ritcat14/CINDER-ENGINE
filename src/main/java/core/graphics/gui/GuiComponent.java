@@ -7,38 +7,40 @@ import core.objects.Object;
 import core.objects.Point;
 import core.objects.Rectangle;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
 public abstract class GuiComponent extends Object implements EventListener {
 
     protected Rectangle bounds;
     protected boolean visible = true;
 
-    private ConcurrentLinkedQueue<GuiComponent> components;
-    private ConcurrentLinkedQueue<GuiComponent> initialisedComponents;
+
+    private List<GuiComponent> components = Collections.synchronizedList(new ArrayList<>());
 
     public GuiComponent(Rectangle rectangle) {
         this.bounds = rectangle;
-        components = new ConcurrentLinkedQueue<>();
-        initialisedComponents = new ConcurrentLinkedQueue<>();
     }
 
-    @Override
     public void init() {
         if (!visible || isRemoved()) return;
-        super.init();
 
         Iterator<GuiComponent> it = components.iterator();
         while (it.hasNext()) it.next().init();
     }
 
     public void addComponent(GuiComponent component) {
-        components.add(component);
+        synchronized (components) {
+            components.add(component);
+        }
     }
 
     public void removeComponent(GuiComponent component) {
-        components.remove(component);
+        synchronized (components) {
+            components.remove(component);
+        }
     }
 
     public boolean contains(Point point) {
@@ -48,46 +50,51 @@ public abstract class GuiComponent extends Object implements EventListener {
     @Override
     public void update() {
         if (!visible || isRemoved()) return;
-        Iterator<GuiComponent> it = components.iterator();
-        while (it.hasNext()) {
-            GuiComponent component = it.next();
-            if (!component.isInitialised()) continue;
-            initialisedComponents.add(component);
-            it.remove();
-        }
 
-        it = initialisedComponents.iterator();
-        while (it.hasNext()) it.next().update();
+        synchronized (components) {
+            Iterator<GuiComponent> iterator = components.iterator();
+            while (iterator.hasNext()) {
+                GuiComponent component = iterator.next();
+                if (component.isRemoved()) iterator.remove();
+                else component.update();
+            }
+        }
     }
 
     @Override
     public void remove() {
         if (!visible) return;
-
         super.remove();
-
-        Iterator<GuiComponent> it = initialisedComponents.iterator();
-        while (it.hasNext()) it.next().remove();
-
-        it = components.iterator();
-        while (it.hasNext()) it.next().remove();
-
-        initialisedComponents.clear();
         components.clear();
     }
 
     @Override
     public void render(Renderer renderer) {
         if (!visible || isRemoved()) return;
-        for (GuiComponent initialisedComponent : initialisedComponents) initialisedComponent.render(renderer);
+
+        synchronized (components) {
+            Iterator<GuiComponent> iterator = components.iterator();
+            while (iterator.hasNext()) {
+                GuiComponent component = iterator.next();
+                if (component.isRemoved()) iterator.remove();
+                else component.render(renderer);
+            }
+        }
     }
 
     @Override
     public void onEvent(Event event) {
         if (!visible || isRemoved()) return;
 
-        Iterator<GuiComponent> it = initialisedComponents.iterator();
-        while (it.hasNext()) it.next().onEvent(event);
+
+        synchronized (components) {
+            Iterator<GuiComponent> iterator = components.iterator();
+            while (iterator.hasNext()) {
+                GuiComponent component = iterator.next();
+                if (component.isRemoved()) iterator.remove();
+                else component.onEvent(event);
+            }
+        }
     }
 
     public void toggleVisible() {

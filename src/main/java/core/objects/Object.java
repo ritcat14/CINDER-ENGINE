@@ -1,9 +1,8 @@
 package core.objects;
 
 import core.graphics.Renderer;
-import core.loading.Resource;
 
-public abstract class Object extends Resource {
+public abstract class Object {
 
     boolean removed = false;
 

@@ -7,40 +7,38 @@ package core.states;
 import core.events.Event;
 import core.events.EventListener;
 import core.graphics.Renderer;
-import core.objectManagers.ObjectManager;
-import core.objects.Object;
+import core.objectManagers.StateManager;
+import core.objectManagers.TaskLoader;
 
-public abstract class State extends Object implements EventListener {
+public abstract class State implements EventListener {
+
+    protected volatile StateManager stateManager;
 
     private volatile boolean requestedChange = false;
     private volatile String requestedState = "";
 
-    protected ObjectManager objectManager; // For allowing the state to handle it's own objects
+    protected volatile TaskLoader taskLoader;
+
     protected String stateName;
 
     public State(String stateName) {
         this.stateName = stateName;
+        this.taskLoader = new TaskLoader();
     }
+
+    public void setStateManager(StateManager stateManager) {
+        this.stateManager = stateManager;
+    }
+
+    public abstract void init();
 
     protected abstract void eventFired(Event event);
 
-    public void setObjectManager(ObjectManager objectManager) {
-        this.objectManager = objectManager;
-    }
+    public abstract void update();
 
-    @Override
-    public void update() {
-        if (objectManager != null) objectManager.update();
-    }
+    public abstract void render(Renderer renderer);
 
-    @Override
-    public void render(Renderer renderer) {
-        if (objectManager != null) objectManager.render(renderer);
-    }
-
-    public void renderGui(Renderer renderer) {
-        if (objectManager != null) objectManager.renderGui(renderer);
-    }
+    public abstract void renderGui(Renderer renderer);
 
     public void requestChange(String stateName) {
         requestedChange = true;
@@ -52,8 +50,8 @@ public abstract class State extends Object implements EventListener {
         requestedState = "";
     }
 
-    public ObjectManager getObjectManager() {
-        return objectManager;
+    public TaskLoader getTaskLoader() {
+        return taskLoader;
     }
 
     public synchronized boolean hasRequestedChange() {
@@ -69,12 +67,11 @@ public abstract class State extends Object implements EventListener {
     }
 
     public void cleanUp() {
-        if (objectManager != null) objectManager.cleanUp();
+        if (taskLoader != null) taskLoader.cleanUp();
     }
 
     @Override
     public void onEvent(Event event) {
         eventFired(event);
-        objectManager.onEvent(event);
     }
 }
